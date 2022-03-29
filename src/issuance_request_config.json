@@ -20,7 +20,10 @@
     },
     "claims": {
       "given_name": "FIRSTNAME",
-      "family_name": "LASTNAME"
+      "family_name": "LASTNAME",
+      "DOB": "DOB",
+      "email": "EMAIL",
+      "disability": "DISABILITY"
     }
   }
 }
