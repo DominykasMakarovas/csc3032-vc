@@ -4,8 +4,8 @@
      <html>
         <head>
             <meta charset="utf-8">
-            <title>Verifiable Credential Expert Issuance and Verifier Sample</title>
-            <meta name="description" content="Verifiable Credentials Expert">
+            <title>Access For All</title>
+            <meta name="description" content="Verifiable Credentials Access For All">
             <meta name="author" content="Microsoft">
             <link rel="stylesheet" href="styles.css">
             <link rel="icon" href="favicon.png">
@@ -13,25 +13,12 @@
         </head>    
         <body>
             <div id="wrap">
-
                 <div style="text-align: center;">
                     <img src="VerifiedCredentialExpert-icon.jpeg" height=200px; />
-                    <h1>Verifiable Credential Expert Issuance and Verifier Sample</h1>
-            
-                    <button type="button" id="idIssue" class="button">GET CREDENTIAL</button>
-                    <button type="button" id="idVerify" class="button">VERIFY CREDENTIAL</button>
-                    <script>
-                            var idIssue = document.getElementById('idIssue');
-                            var idVerify = document.getElementById('idVerify');
-                            idIssue.addEventListener('click', () => {
-                                window.location = "issuer.html";
-                            })
-                            idVerify.addEventListener('click', () => {
-                                window.location = "verifier.html";
-                            })
-                        </script>
+                    <h1>Verifiable Credential Access For All Issuance and Verifier Sample</h1>
+                    <button type="button" onclick="location.href='issuer.html'" class="button">GET CREDENTIAL</button>
+                    <button type="button" onclick="location.href='verifier.html'" class="button">VERIFY CREDENTIAL</button>
                 </div>
-
             </div>
         </body>
     </html>

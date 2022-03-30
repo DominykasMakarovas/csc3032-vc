@@ -111,7 +111,7 @@ mainApp.app.get('/api/issuer/issuance-request', async (req, res) => {
     issuanceConfig.issuance.claims.family_name = "Makarovas";
     issuanceConfig.issuance.claims.DOB = "22/05/1999";
     issuanceConfig.issuance.claims.email = "dom.makarovas@gmail.com",
-    issuanceConfig.issuance.claims.disability = "Yes"
+    issuanceConfig.issuance.claims.disability = "true"
   }
 
   console.log( 'VC Client API Request' );

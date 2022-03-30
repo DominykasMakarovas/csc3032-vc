@@ -5,9 +5,9 @@
 
     <head>
         <meta charset="utf-8">
-        <title>Verifiable Credential Expert Request API Sample - Issuer</title>
-        <meta name="description" content="Verified Credentials Expert">
-        <meta name="author" content="Microsoft">
+        <title>Access For All</title>
+        <meta name="description" content="Verifiable Credentials Access For All Issuer">
+        <meta name="author" content="AccessForAll">
         <link rel="stylesheet" href="styles.css">
         <link rel="icon" href="favicon.png">    
     </head>
@@ -15,10 +15,25 @@
     <body>
         <div id="wrap">
             <div style="text-align: center;">
-                <img src="VerifiedCredentialExpert-icon.jpeg" height=200px; />
-                <h1>Verifiable Credential Expert Issuance</h1>
-        
-            <button type="button" id="sign-in" class="button">GET CREDENTIAL</button>
+                <img src="VerifiedCredentialExpert-icon.jpeg" onclick="location.href='index.html'" height=200px; />
+                <h1>Verifiable Credential Access For All Issuance</h1>
+            <form id="form">
+                <label for="firstName">First name:</label><br>
+                <input type="text" id="firstName" name="firstName"><br>
+                <label for="lastName">Last name:</label><br>
+                <input type="text" id="lastName" name="lastName"><br>
+                <label for="DOB">Date of Birth:</label><br>
+                <input type="date" id="DOB" name="DOB"><br>
+                <label for="email">Email address:</label><br>
+                <input type="email" id="email" name="email"><br>
+                <label for="disability">Disability:</label>
+                <select name="disability" id="disability">
+                    <option value="true">False</option>
+                    <option value="false">True</option>
+                </select>
+            </form>
+            <button type="button" id="sign-in" class="button">GET CREDENTIAL</button><br>
+            
             <div id="qrText"  style="display:none;">
                 <p class="small-text">
                     <img src="authenticator-icon.png" alt="Authenticator icon" class="icon-small"><br>
@@ -28,14 +43,12 @@
             <a id="deeplink" style="display: none;margin-top: 10px;">Tap to open Authenticator on mobile</a>
             <div id="qrcode" style="text-align: center"></div>
             <div id="pinCodeText" style="display: none"></div>
-
             <div id="message-wrapper" class="margin-bottom-75 margin-top-75" style="display: none">
                <i class="fas fa-user-check green icon-text-large margin-bottom-25"></i>
                <div id="message"></div>
                <br />
                <div id="payload"></div>
             </div>
-
             <script src="qrcode.min.js"></script>
             <script>
                 var signIn = document.getElementById('sign-in');
