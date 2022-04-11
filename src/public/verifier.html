@@ -35,6 +35,7 @@
                <div id="subject"></div>
                 <br />
                <div id="payload"></div>
+               <p id="disability"></p>
             </div>
 
             <script src="qrcode.min.js"></script>
@@ -85,7 +86,15 @@
                                     if (respMsg.status == 'presentation_verified') {
                                         document.getElementById('message').innerHTML = respMsg.message;
                                         document.getElementById('payload').innerHTML = "Payload: " + JSON.stringify(respMsg.payload);
-                                        document.getElementById('subject').innerHTML = respMsg.firstName +" " + respMsg.lastName +" is a Verifiable Credential Expert";
+                                        document.getElementById('subject').innerHTML = respMsg.firstName +" " + respMsg.lastName +" holds an Access For All credential";
+                                        
+                                        let arr = [];
+                                        if (respMsg.disability == 'true'){
+                                            arr.push(respMsg.disability);
+                                            arr.push("exampledisability");
+                                            arr.push("exampledisability2");
+                                            document.getElementById('disability').innerHTML = arr.join(", ");
+                                        }
                                         clearInterval(checkStatus);
                                     }
                                 }
