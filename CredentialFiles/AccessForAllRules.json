@@ -1,0 +1,24 @@
+{
+  "attestations": {
+    "idTokens": [
+      {
+        "id": "https://self-issued.me",
+        "mapping": {
+          "firstName": { "claim": "$.given_name" },
+          "lastName": { "claim": "$.family_name" },
+		      "DOB": { "claim": "$.DOB" },
+		      "email": { "claim": "$.email", "indexed": true },
+		      "disability": { "claim": "$.disability" }
+        },
+
+        "configuration": "https://self-issued.me",
+        "client_id": "",
+        "redirect_uri": ""
+      }
+    ]
+  },
+  "validityInterval": 2592001,
+  "vc": {
+    "type": [ "AccessForAll" ]
+  }
+}

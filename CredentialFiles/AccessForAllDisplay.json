@@ -1,0 +1,42 @@
+{
+  "default": {
+    "locale": "en-US",
+    "card": {
+      "title": "Access For All",
+      "issuedBy": "Newcastle University",
+      "backgroundColor": "#000000",
+      "textColor": "#ffffff",
+      "logo": {
+        "uri": "https://dominykasmakarovas.github.io/assets/accessforall.png",
+        "description": "Newcastle University - Access For All"
+      },
+      "description": "Use your verified credential to prove to anyone that you have access to an event/help request."
+    },
+    "consent": {
+      "title": "Do you want to get your Verified Credential?",
+      "instructions": "Sign in with your account to get your card."
+    },
+    "claims": {
+      "vc.credentialSubject.firstName": {
+        "type": "String",
+        "label": "First name"
+      },
+      "vc.credentialSubject.lastName": {
+        "type": "String",
+        "label": "Last name"
+      },
+	  "vc.credentialSubject.DOB": {
+        "type": "String",
+        "label": "DOB"
+      },
+	  "vc.credentialSubject.email": {
+        "type": "String",
+        "label": "Email"
+      },
+	  "vc.credentialSubject.disability": {
+        "type": "String",
+        "label": "Disability"
+      }
+    }
+  }
+}

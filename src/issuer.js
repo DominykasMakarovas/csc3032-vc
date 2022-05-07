@@ -62,86 +62,94 @@ function generatePin( digits ) {
 /**
  * This method is called from the UI to initiate the issuance of the verifiable credential
  */
-mainApp.app.get('/api/issuer/issuance-request', async (req, res) => {
-  requestTrace( req );
-  var id = req.session.id;
-  // prep a session state of 0
-  mainApp.sessionStore.get( id, (error, session) => {
-    var sessionData = {
-      "status" : 0,
-      "message": "Waiting for QR code to be scanned"
-    };
-    if ( session ) {
-      session.sessionData = sessionData;
-      mainApp.sessionStore.set( id, session);  
-    }
+mainApp.app.post('/api/issuer/issuance-request', async (req, res) => {
+  var body = '';
+  req.on('data', function (data) {
+    body += data;
   });
+  req.on('end', async function () {
+    requestTrace( req );
+    var id = req.session.id;
+    
+    // prep a session state of 0
+    mainApp.sessionStore.get( id, (error, session) => {
+      var sessionData = {
+        "status" : 0,
+        "message": "Waiting for QR code to be scanned"
+      };
+      if ( session ) {
+        session.sessionData = sessionData;
+        mainApp.sessionStore.set( id, session);  
+      }
+    });
 
-  // get the Access Token
-  var accessToken = "";
-  try {
-    const result = await mainApp.msalCca.acquireTokenByClientCredential(mainApp.msalClientCredentialRequest);
-    if ( result ) {
-      accessToken = result.accessToken;
+    // get the Access Token
+    var accessToken = "";
+    try {
+      const result = await mainApp.msalCca.acquireTokenByClientCredential(mainApp.msalClientCredentialRequest);
+      if ( result ) {
+        accessToken = result.accessToken;
+      }
+    } catch {
+      console.log( "failed to get access token" );
+      res.status(401).json({
+          'error': 'Could not acquire credentials to access your Azure Key Vault'
+          });  
+        return; 
     }
-  } catch {
-    console.log( "failed to get access token" );
-    res.status(401).json({
-        'error': 'Could not acquire credentials to access your Azure Key Vault'
-        });  
-      return; 
-  }
-  console.log( `accessToken: ${accessToken}` );
+    console.log( `accessToken: ${accessToken}` );
 
-  // modify the callback method to make it easier to debug 
-  // with tools like ngrok since the URI changes all the time
-  // this way you don't need to modify the callback URL in the payload every time
-  // ngrok changes the URI
-  issuanceConfig.callback.url = `https://${req.hostname}/api/issuer/issuance-request-callback`;
-  // modify payload with new state, the state is used to be able to update the UI when callbacks are received from the VC Service
-  issuanceConfig.callback.state = id;
-  // check if pin is required, if found make sure we set a new random pin
-  // pincode is only used when the payload contains claim value pairs which results in an IDTokenhint
-  if ( issuanceConfig.issuance.pin ) {
-    issuanceConfig.issuance.pin.value = generatePin( issuanceConfig.issuance.pin.length );
-  }
-  // here you could change the payload manifest and change the firstname and lastname
-  if ( issuanceConfig.issuance.claims ) {
-    issuanceConfig.issuance.claims.given_name = "Dom";
-    issuanceConfig.issuance.claims.family_name = "Makarovas";
-    issuanceConfig.issuance.claims.DOB = "22/05/1999";
-    issuanceConfig.issuance.claims.email = "dom.makarovas@gmail.com",
-    issuanceConfig.issuance.claims.disability = "true"
-  }
-
-  console.log( 'VC Client API Request' );
-  var client_api_request_endpoint = `${mainApp.config.msIdentityHostName}${mainApp.config.azTenantId}/verifiablecredentials/request`;
-  console.log( client_api_request_endpoint );
-  console.log( issuanceConfig );
-
-  var payload = JSON.stringify(issuanceConfig);
-  const fetchOptions = {
-    method: 'POST',
-    body: payload,
-    headers: {
-      'Content-Type': 'application/json',
-      'Content-Length': payload.length.toString(),
-      'Authorization': `Bearer ${accessToken}`
+    // modify the callback method to make it easier to debug 
+    // with tools like ngrok since the URI changes all the time
+    // this way you don't need to modify the callback URL in the payload every time
+    // ngrok changes the URI
+    issuanceConfig.callback.url = `https://${req.hostname}/api/issuer/issuance-request-callback`;
+    // modify payload with new state, the state is used to be able to update the UI when callbacks are received from the VC Service
+    issuanceConfig.callback.state = id;
+    // check if pin is required, if found make sure we set a new random pin
+    // pincode is only used when the payload contains claim value pairs which results in an IDTokenhint
+    if ( issuanceConfig.issuance.pin ) {
+      issuanceConfig.issuance.pin.value = generatePin( issuanceConfig.issuance.pin.length );
     }
-  };
+    // here you could change the payload manifest and change the firstname and lastname
+    if ( issuanceConfig.issuance.claims ) {
+      let claim = JSON.parse(body);
+      issuanceConfig.issuance.claims.given_name = claim.firstname;
+      issuanceConfig.issuance.claims.family_name = claim.surname;
+      issuanceConfig.issuance.claims.DOB = claim.DOB;
+      issuanceConfig.issuance.claims.email = claim.email,
+      issuanceConfig.issuance.claims.disability = claim.disability
+    }
 
-  const response = await fetch(client_api_request_endpoint, fetchOptions);
-  var resp = await response.json()
-  // the response from the VC Request API call is returned to the caller (the UI). It contains the URI to the request which Authenticator can download after
-  // it has scanned the QR code. If the payload requested the VC Request service to create the QR code that is returned as well
-  // the javascript in the UI will use that QR code to display it on the screen to the user.            
-  resp.id = id;                              // add session id so browser can pull status
-  if ( issuanceConfig.issuance.pin ) {
-    resp.pin = issuanceConfig.issuance.pin.value;   // add pin code so browser can display it
-  }
-  console.log( 'VC Client API Response' );
-  console.log( resp );  
-  res.status(200).json(resp);       
+    console.log( 'VC Client API Request' );
+    var client_api_request_endpoint = `${mainApp.config.msIdentityHostName}${mainApp.config.azTenantId}/verifiablecredentials/request`;
+    console.log( client_api_request_endpoint );
+    console.log( issuanceConfig );
+
+    var payload = JSON.stringify(issuanceConfig);
+    const fetchOptions = {
+      method: 'POST',
+      body: payload,
+      headers: {
+        'Content-Type': 'application/json',
+        'Content-Length': payload.length.toString(),
+        'Authorization': `Bearer ${accessToken}`
+      }
+    };
+
+    const response = await fetch(client_api_request_endpoint, fetchOptions);
+    var resp = await response.json()
+    // the response from the VC Request API call is returned to the caller (the UI). It contains the URI to the request which Authenticator can download after
+    // it has scanned the QR code. If the payload requested the VC Request service to create the QR code that is returned as well
+    // the javascript in the UI will use that QR code to display it on the screen to the user.            
+    resp.id = id;                              // add session id so browser can pull status
+    if ( issuanceConfig.issuance.pin ) {
+      resp.pin = issuanceConfig.issuance.pin.value;   // add pin code so browser can display it
+    }
+    console.log( 'VC Client API Response' );
+    console.log( resp );  
+    res.status(200).json(resp);  
+  });     
 })
 /**
  * This method is called by the VC Request API when the user scans a QR code and presents a Verifiable Credential to the service
