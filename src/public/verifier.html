@@ -38,8 +38,13 @@
                <p id="disability"></p>
             </div>
 
+            <div id="refresh" style="visibility: hidden;">
+                <button id="refreshButton">Verify Another credential</button>
+            </div>
+
             <script src="qrcode.min.js"></script>
             <script>
+                var refresh = document.getElementById('refresh');
                 var signIn = document.getElementById('sign-in');
                 var signOut = document.getElementById('sign-out');
                 var display = document.getElementById('display');
@@ -89,18 +94,21 @@
                                         document.getElementById('subject').innerHTML = respMsg.firstName +" " + respMsg.lastName +" holds an Access For All credential";
                                         
                                         let arr = [];
-                                        if (respMsg.disability == 'true'){
-                                            arr.push(respMsg.disability);
-                                            arr.push("exampledisability");
-                                            arr.push("exampledisability2");
+                                        if (respMsg.disability == 'Disability 1'){
+                                            arr.push("Adjustment 1");
                                             document.getElementById('disability').innerHTML = arr.join(", ");
+                                            document.getElementById('refresh').style.visibility = "visible";
+                                            sessionStorage.setItem('adjustments', JSON.stringify(arr));
+                                            console.log(JSON.parse(sessionStorage.getItem('adjustments')));
                                         }
                                         clearInterval(checkStatus);
                                     }
                                 }
                             })
-                    }, 1500); //change this to higher interval if you use ngrok to prevent overloading the free tier service
+                    }, 1500);
                 })
+
+                refresh.addEventListener('click', () => location.reload());
             </script>
             </div>
 

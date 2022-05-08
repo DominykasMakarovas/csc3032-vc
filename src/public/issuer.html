@@ -19,20 +19,22 @@
                 <h1>Verifiable Credential Access For All Issuance</h1>
             <form id="form">
                 <label for="firstName">First name:</label><br>
-                <input type="text" id="firstName" name="firstName"><br>
+                <input type="text" id="firstName" name="firstName" required><br>
                 <label for="lastName">Last name:</label><br>
-                <input type="text" id="lastName" name="lastName"><br>
+                <input type="text" id="lastName" name="lastName" required><br>
                 <label for="DOB">Date of Birth:</label><br>
-                <input type="date" id="DOB" name="DOB"><br>
+                <input type="date" id="DOB" name="DOB" required><br>
                 <label for="email">Email address:</label><br>
-                <input type="email" id="email" name="email"><br>
+                <input type="email" id="email" name="email" required><br>
                 <label for="disability">Disability:</label>
-                <select name="disability" id="disability">
-                    <option value="true">False</option>
-                    <option value="false">True</option>
+                <select name="disability" id="disability" required>
+                    <option value="Empty"></option>
+                    <option value="Disability 1">Disability 1</option>
+                    <option value="Disability 2">Disability 2</option>
+                    <option value="Disability 3">Disability 3</option>
                 </select>
             </form>
-            <button type="button" id="sign-in" class="button">GET CREDENTIAL</button><br>
+            <button type="button" id="sign-in" class="button">CREATE CREDENTIAL</button><br>
             
             <div id="qrText"  style="display:none;">
                 <p class="small-text">
@@ -57,7 +59,6 @@
                 var qrcode = new QRCode("qrcode", { width: 300, height: 300 });
                 var respIssuanceReq = null;
                 signIn.addEventListener('click', () => {
-                    
                     fetch('/api/issuer/issuance-request',
                     {
                         method: 'POST',
