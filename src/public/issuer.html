@@ -19,20 +19,25 @@
                 <h1>Verifiable Credential Access For All Issuance</h1>
             <form id="form">
                 <label for="firstName">First name:</label><br>
-                <input type="text" id="firstName" name="firstName" required><br>
+                <input type="text" id="firstName" name="firstName" required><br><br>
                 <label for="lastName">Last name:</label><br>
-                <input type="text" id="lastName" name="lastName" required><br>
+                <input type="text" id="lastName" name="lastName" required><br><br>
                 <label for="DOB">Date of Birth:</label><br>
-                <input type="date" id="DOB" name="DOB" required><br>
+                <input type="date" id="DOB" name="DOB" required><br><br>
                 <label for="email">Email address:</label><br>
-                <input type="email" id="email" name="email" required><br>
+                <input type="email" id="email" name="email" required><br><br>
+
                 <label for="disability">Disability:</label>
-                <select name="disability" id="disability" required>
-                    <option value="Empty"></option>
-                    <option value="Disability 1">Disability 1</option>
-                    <option value="Disability 2">Disability 2</option>
-                    <option value="Disability 3">Disability 3</option>
-                </select>
+                <input type="checkbox" id="disability1" name="disability" value="Disability1">
+                <label for="disability1">Disability 1</label>
+                <input type="checkbox" id="disability2" name="disability" value="Disability2">
+                <label for="disability2">Disability 2</label><br><br>
+
+                <label for="disability">Adjustments:</label>
+                <input type="checkbox" id="adjustment1" name="adjustments" value="Adjustment 1">
+                <label for="adjustment1">Adjustment 1</label>
+                <input type="checkbox" id="adjustment2" name="adjustments" value="Adjustment 1">
+                <label for="adjustment2">Adjustment 2</label>
             </form>
             <button type="button" id="sign-in" class="button">CREATE CREDENTIAL</button><br>
             
@@ -58,7 +63,18 @@
                 var display = document.getElementById('display');
                 var qrcode = new QRCode("qrcode", { width: 300, height: 300 });
                 var respIssuanceReq = null;
+                
+               
                 signIn.addEventListener('click', () => {
+                    let radios = document.getElementsByName('disability');
+                    let arr = [];
+                    for (let i = 0; i < radios.length; i++) {
+                        if (radios[i].type === 'checkbox' && radios[i].checked) {
+                            // get value, set checked flag or do whatever you need to
+                            arr.push(radios[i].value);
+                        }
+                    }
+                    let allDisabilities = arr.toString();    
                     fetch('/api/issuer/issuance-request',
                     {
                         method: 'POST',
@@ -67,7 +83,8 @@
                             surname: document.getElementById('lastName').value,
                             DOB: document.getElementById('DOB').value,
                             email: document.getElementById('email').value,
-                            disability: document.getElementById('disability').value
+                            disability: allDisabilities
+                            //disability: "Disability 1, Disability 2, Disability 3"
                         }),
                         headers: {
                             'Content-type': 'application/json' // The type of data you're sending
