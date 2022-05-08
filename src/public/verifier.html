@@ -93,7 +93,12 @@
                                         document.getElementById('payload').innerHTML = "Payload: " + JSON.stringify(respMsg.payload);
                                         document.getElementById('subject').innerHTML = respMsg.firstName +" " + respMsg.lastName +" holds an Access For All credential";
                                         
-                                        let arr = [];
+                                        //let arr = [];
+                                        let arr = JSON.parse(sessionStorage.getItem('adjustments'));
+                                        console.log(arr);
+                                        if (!arr)
+                                            arr = [];
+                                        
                                         if (respMsg.disability == 'Disability 1'){
                                             arr.push("Adjustment 1");
                                             document.getElementById('disability').innerHTML = arr.join(", ");
