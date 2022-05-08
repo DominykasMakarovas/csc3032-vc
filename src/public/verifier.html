@@ -39,7 +39,7 @@
             </div>
 
             <div id="refresh" style="visibility: hidden;">
-                <button id="refreshButton">Verify Another credential</button>
+                <button type="button" id="refreshButton" class="button">Verify Another credential</button>
             </div>
 
             <script src="qrcode.min.js"></script>
@@ -93,14 +93,15 @@
                                         document.getElementById('payload').innerHTML = "Payload: " + JSON.stringify(respMsg.payload);
                                         document.getElementById('subject').innerHTML = respMsg.firstName +" " + respMsg.lastName +" holds an Access For All credential";
                                         
-                                        //let arr = [];
                                         let arr = JSON.parse(sessionStorage.getItem('adjustments'));
                                         console.log(arr);
                                         if (!arr)
                                             arr = [];
                                         
                                         if (respMsg.disability == 'Disability 1'){
-                                            arr.push("Adjustment 1");
+                                            if (!arr.includes("Adjustment 1")) {
+                                                arr.push("Adjustment 1");
+                                            }
                                             document.getElementById('disability').innerHTML = arr.join(", ");
                                             document.getElementById('refresh').style.visibility = "visible";
                                             sessionStorage.setItem('adjustments', JSON.stringify(arr));

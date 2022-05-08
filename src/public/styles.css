@@ -88,3 +88,29 @@ body {
 #message {
   font-size: 1.5em;
 }
+
+#table-info {
+  font-size: 1.5em;
+  display: grid;
+  place-items: center;
+}
+
+th {
+  background-color: purple;
+  color: white;
+}
+
+table, td {  
+  border: 2px solid purple;
+  text-align: left;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th, td {
+  padding: 15px;
+  text-align: left;
+}

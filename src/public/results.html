@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Access For All</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="favicon.png">
+</head>
+<body>
+    <div id="wrap">
+        <div style="text-align : center;">
+            <img src="VerifiedCredentialExpert-icon.jpeg" onclick="location.href='index.html'" height=200px; />
+            <h1>Access For All - Reasonable Adjustments for this event</h1>
+            <button type="button" id="get-adjustments" class="button">GET ADJUSTMENTS</button>
+        </div>
+    </div>
+    <br>
+    <div id="table-info" style="visibility: hidden;">
+        <div style="text-align : center;">
+            <table id="adjustment-table">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Adjustments for this event</th>
+              </tr>
+            </thead>
+            <tbody id="table-body">
+            </tbody>
+        </table>
+        <br>
+        <button type="button" id="clearButton" class="button">Clear Adjustments</button>
+    </div>
+
+    <div class="adjustments" id="no-adjustments" style="visibility: hidden;">
+        <p>No adjustments made yet, please use the <a href="verifier.html">verifier page</a> to get adjustments for this event/help request</p>  
+    </div>
+
+    <div style="text-align : center;">
+        <button type="button" onclick="location.href='index.html'" class="button">Return Home</button>
+    </div>
+
+    <script>
+        let button = document.getElementById('get-adjustments');
+        let clearButton = document.getElementById('clearButton');
+        let tabledata = document.getElementById('table-body');
+        
+        button.addEventListener('click', () => {
+            let adjustments = JSON.parse(sessionStorage.getItem('adjustments'));
+
+            if (adjustments == null) {
+                document.getElementById("no-adjustments").style.visibility = "visible";
+                document.getElementById('adjustment-table').style.visibility = "hidden";
+            }
+            
+            const tablebody = document.getElementById('table-body');
+           
+            let count = 0;
+            adjustments.forEach(element => {
+                count++;
+                let row = tablebody.insertRow();
+                let int = row.insertCell(0);
+                int.innerHTML = count;
+                let adjustmentInfo = row.insertCell(1);
+                adjustmentInfo.innerHTML = element;
+            });
+            
+            document.getElementById('get-adjustments').style.visibility = "hidden";
+            document.getElementById('table-info').style.visibility = "visible";
+            console.log(JSON.parse(sessionStorage.getItem('adjustments')));
+        });
+        
+        clearButton.addEventListener('click', () => {
+            sessionStorage.removeItem('adjustments');
+            location.reload();
+        });
+    </script>
+    </body>
+</html>
