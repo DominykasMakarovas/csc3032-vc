@@ -52,23 +52,23 @@
             if (adjustments == null) {
                 document.getElementById("no-adjustments").style.visibility = "visible";
                 document.getElementById('adjustment-table').style.visibility = "hidden";
-            }
-            
-            const tablebody = document.getElementById('table-body');
+            } else {
+                const tablebody = document.getElementById('table-body');
            
-            let count = 0;
-            adjustments.forEach(element => {
-                count++;
-                let row = tablebody.insertRow();
-                let int = row.insertCell(0);
-                int.innerHTML = count;
-                let adjustmentInfo = row.insertCell(1);
-                adjustmentInfo.innerHTML = element;
-            });
+                let count = 0;
+                adjustments.forEach(element => {
+                    count++;
+                    let row = tablebody.insertRow();
+                    let int = row.insertCell(0);
+                    int.innerHTML = count;
+                    let adjustmentInfo = row.insertCell(1);
+                    adjustmentInfo.innerHTML = element;
+                });
             
-            document.getElementById('get-adjustments').style.visibility = "hidden";
-            document.getElementById('table-info').style.visibility = "visible";
-            console.log(JSON.parse(sessionStorage.getItem('adjustments')));
+                document.getElementById('get-adjustments').style.visibility = "hidden";
+                document.getElementById('table-info').style.visibility = "visible";
+                console.log(JSON.parse(sessionStorage.getItem('adjustments')));
+            }
         });
         
         clearButton.addEventListener('click', () => {
