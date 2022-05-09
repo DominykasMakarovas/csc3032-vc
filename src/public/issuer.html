@@ -28,15 +28,15 @@
                 <input type="email" id="email" name="email" required><br><br>
 
                 <label for="disability">Disability:</label>
-                <input type="checkbox" id="disability1" name="disability" value="Disability1">
+                <input type="checkbox" id="disability1" name="disability" value="Disability 1">
                 <label for="disability1">Disability 1</label>
-                <input type="checkbox" id="disability2" name="disability" value="Disability2">
+                <input type="checkbox" id="disability2" name="disability" value="Disability 2">
                 <label for="disability2">Disability 2</label><br><br>
 
-                <label for="disability">Adjustments:</label>
+                <label for="adjustments">Adjustments:</label>
                 <input type="checkbox" id="adjustment1" name="adjustments" value="Adjustment 1">
                 <label for="adjustment1">Adjustment 1</label>
-                <input type="checkbox" id="adjustment2" name="adjustments" value="Adjustment 1">
+                <input type="checkbox" id="adjustment2" name="adjustments" value="Adjustment 2">
                 <label for="adjustment2">Adjustment 2</label>
             </form>
             <button type="button" id="sign-in" class="button">CREATE CREDENTIAL</button><br>
@@ -63,7 +63,6 @@
                 var display = document.getElementById('display');
                 var qrcode = new QRCode("qrcode", { width: 300, height: 300 });
                 var respIssuanceReq = null;
-                
                
                 signIn.addEventListener('click', () => {
                     let radios = document.getElementsByName('disability');
@@ -74,7 +73,19 @@
                             arr.push(radios[i].value);
                         }
                     }
-                    let allDisabilities = arr.toString();    
+                    let allDisabilities = arr.toString(); 
+                    
+                    let adjustments = document.getElementsByName('adjustments');
+                    let adjustmentList = [];
+                    for (let i = 0; i < adjustments.length; i++) {
+                        if (adjustments[i].type === 'checkbox' && adjustments[i].checked) {
+                            // get value, set checked flag or do whatever you need to
+                            adjustmentList.push(adjustments[i].value);
+                        }
+                    }
+                    let allAdjustments = adjustmentList.toString();
+                    console.log(allAdjustments);
+
                     fetch('/api/issuer/issuance-request',
                     {
                         method: 'POST',
@@ -83,7 +94,8 @@
                             surname: document.getElementById('lastName').value,
                             DOB: document.getElementById('DOB').value,
                             email: document.getElementById('email').value,
-                            disability: allDisabilities
+                            disability: allDisabilities,
+                            adjustment : allAdjustments
                             //disability: "Disability 1, Disability 2, Disability 3"
                         }),
                         headers: {

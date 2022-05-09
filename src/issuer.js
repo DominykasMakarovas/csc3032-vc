@@ -119,6 +119,7 @@ mainApp.app.post('/api/issuer/issuance-request', async (req, res) => {
       issuanceConfig.issuance.claims.DOB = claim.DOB;
       issuanceConfig.issuance.claims.email = claim.email,
       issuanceConfig.issuance.claims.disability = claim.disability
+      issuanceConfig.issuance.claims.adjustment = claim.adjustment
     }
 
     console.log( 'VC Client API Request' );

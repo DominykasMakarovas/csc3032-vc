@@ -8,7 +8,8 @@
           "lastName": { "claim": "$.family_name" },
 		      "DOB": { "claim": "$.DOB" },
 		      "email": { "claim": "$.email", "indexed": true },
-		      "disability": { "claim": "$.disability" }
+		      "disability": { "claim": "$.disability" },
+          "adjustment": { "claim": "$.adjustment"}
         },
 
         "configuration": "https://self-issued.me",

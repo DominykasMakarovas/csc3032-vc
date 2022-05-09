@@ -23,7 +23,8 @@
       "family_name": "LASTNAME",
       "DOB": "DOB",
       "email": "EMAIL",
-      "disability": "DISABILITY"
+      "disability": "DISABILITY",
+      "adjustment": "ADJUSTMENT"
     }
   }
 }
