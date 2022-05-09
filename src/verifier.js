@@ -167,6 +167,7 @@ mainApp.app.post('/api/verifier/presentation-request-callback', parser, async (r
             "DOB": presentationResponse.issuers[0].claims.DOB,
             "email": presentationResponse.issuers[0].claims.email,
             "disability": presentationResponse.issuers[0].claims.disability,
+            "adjustment": presentationResponse.issuers[0].claims.adjustment,
             "presentationResponse": presentationResponse
         };
         session.sessionData = cacheData;

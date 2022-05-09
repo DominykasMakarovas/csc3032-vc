@@ -94,15 +94,16 @@
                                         document.getElementById('subject').innerHTML = respMsg.firstName +" " + respMsg.lastName +" holds an Access For All credential";
                                         
                                         let arr = JSON.parse(sessionStorage.getItem('adjustments'));
-                                        console.log(arr);
                                         if (!arr){
                                             arr = [];
                                         }
                                         
-                                        if (respMsg.disability == 'Disability 1'){
-                                            if (!arr.includes("Adjustment 1")) {
-                                                arr.push("Adjustment 1");
-                                            }
+                                        if (respMsg.adjustment){
+                                            let words = respMsg.adjustment.split(",")
+                                            words.forEach(element => {
+                                                if (!arr.includes(element))
+                                                    arr.push(element);
+                                            });
                                             document.getElementById('disability').innerHTML = arr.join(", ");
                                             document.getElementById('refresh').style.visibility = "visible";
                                             sessionStorage.setItem('adjustments', JSON.stringify(arr));

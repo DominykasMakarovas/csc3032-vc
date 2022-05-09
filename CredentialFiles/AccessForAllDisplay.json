@@ -37,10 +37,10 @@
         "type": "String",
         "label": "Disability"
       },
-      "vc.credentialSubject.adjustment": {
-          "type": "String",
-          "label": "Adjustment"
-        }
+    "vc.credentialSubject.adjustment": {
+        "type": "String",
+        "label": "Adjustment"
+      }
     }
   }
 }
