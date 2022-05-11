@@ -17,6 +17,7 @@
             <div style="text-align: center;">
                 <img src="VerifiedCredentialExpert-icon.jpeg" onclick="location.href='index.html'" height=200px; />
                 <h1>Verifiable Credential Access For All Issuance</h1>
+
             <form id="form">
                 <label for="firstName">First name:</label><br>
                 <input type="text" id="firstName" name="firstName" required><br><br>
@@ -25,17 +26,17 @@
                 <label for="DOB">Date of Birth:</label><br>
                 <input type="date" id="DOB" name="DOB" required><br><br>
                 <label for="email">Email address:</label><br>
-                <input type="email" id="email" name="email" required><br><br>
+                <input type="email" id="email" name="email"><br><br>
 
-                <label for="disability">Disability:</label>
+                <label for="disability">Disability:</label><br>
                 <input type="checkbox" id="disability1" name="disability" value="Disability 1">
-                <label for="disability1">Disability 1</label>
+                <label for="disability1">Disability 1</label><br>
                 <input type="checkbox" id="disability2" name="disability" value="Disability 2">
                 <label for="disability2">Disability 2</label><br><br>
 
-                <label for="adjustments">Adjustments:</label>
+                <label for="adjustments">Adjustments:</label><br>
                 <input type="checkbox" id="adjustment1" name="adjustments" value="Adjustment 1">
-                <label for="adjustment1">Adjustment 1</label>
+                <label for="adjustment1">Adjustment 1</label><br>
                 <input type="checkbox" id="adjustment2" name="adjustments" value="Adjustment 2">
                 <label for="adjustment2">Adjustment 2</label>
             </form>
@@ -58,24 +59,39 @@
             </div>
             <script src="qrcode.min.js"></script>
             <script>
-                var signIn = document.getElementById('sign-in');
-                var signOut = document.getElementById('sign-out');
-                var display = document.getElementById('display');
-                var qrcode = new QRCode("qrcode", { width: 300, height: 300 });
-                var respIssuanceReq = null;
-               
+                let signIn = document.getElementById('sign-in');
+                let signOut = document.getElementById('sign-out');
+                let display = document.getElementById('display');
+                let qrcode = new QRCode("qrcode", { width: 300, height: 300 });
+                let respIssuanceReq = null;
+                
+                const validateData = (inputData) => {
+                    let invalidInput = false;
+                    Object.values(inputData).forEach(element => {
+                        if (element.length < 1)
+                            invalidInput = true;
+                    });
+
+                    return invalidInput;              
+                };
+                
                 signIn.addEventListener('click', () => {
-                    let radios = document.getElementsByName('disability');
+                    let inputName = document.getElementById('firstName').value;
+                    let inputSurname = document.getElementById('lastName').value;
+                    let inputDOB = document.getElementById('DOB').value;
+                    let inputEmail = document.getElementById('email').value;
+                    let adjustments = document.getElementsByName('adjustments'); 
+                    let disabilities = document.getElementsByName('disability');
+
                     let arr = [];
-                    for (let i = 0; i < radios.length; i++) {
-                        if (radios[i].type === 'checkbox' && radios[i].checked) {
+                    for (let i = 0; i < disabilities.length; i++) {
+                        if (disabilities[i].type === 'checkbox' && disabilities[i].checked) {
                             // get value, set checked flag or do whatever you need to
-                            arr.push(radios[i].value);
+                            arr.push(disabilities[i].value);
                         }
                     }
                     let allDisabilities = arr.toString(); 
                     
-                    let adjustments = document.getElementsByName('adjustments');
                     let adjustmentList = [];
                     for (let i = 0; i < adjustments.length; i++) {
                         if (adjustments[i].type === 'checkbox' && adjustments[i].checked) {
@@ -84,19 +100,32 @@
                         }
                     }
                     let allAdjustments = adjustmentList.toString();
-                    console.log(allAdjustments);
+
+                    const inputData = {
+                        name : inputName,
+                        surname : inputSurname,
+                        DOB : inputDOB,
+                        email : inputEmail,
+                        adjustments : allAdjustments,
+                        disabilities : allDisabilities
+                    }
+                    
+                    console.log(validateData(inputData));
+                    if (validateData(inputData)){
+                        alert('Please fill in the correct fields');
+                        return;
+                    }
 
                     fetch('/api/issuer/issuance-request',
                     {
                         method: 'POST',
                         body: JSON.stringify({
-                            firstname: document.getElementById('firstName').value,
-                            surname: document.getElementById('lastName').value,
-                            DOB: document.getElementById('DOB').value,
-                            email: document.getElementById('email').value,
+                            firstname: inputName,
+                            surname: inputSurname,
+                            DOB: inputDOB,
+                            email: inputEmail,
                             disability: allDisabilities,
                             adjustment : allAdjustments
-                            //disability: "Disability 1, Disability 2, Disability 3"
                         }),
                         headers: {
                             'Content-type': 'application/json' // The type of data you're sending
@@ -159,7 +188,9 @@
                                 }
                             })
                     }, 1500);
-                })
+                });
+
+
             </script>
             </div>
             </div>
