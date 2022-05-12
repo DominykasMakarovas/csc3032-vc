@@ -5,30 +5,20 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////
 // Node packages
-var express = require('express')
-var session = require('express-session')
-var base64url = require('base64url')
-var secureRandom = require('secure-random');
-var bodyParser = require('body-parser')
-// mod.cjs
+const bodyParser = require('body-parser')
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
-const https = require('https')
-const url = require('url')
-const { SSL_OP_COOKIE_EXCHANGE } = require('constants');
-var msal = require('@azure/msal-node');
-var uuid = require('uuid');
-var mainApp = require('./app.js');
-
-var parser = bodyParser.urlencoded({ extended: false });
+const uuid = require('uuid');
+const mainApp = require('./app.js');
+const parser = bodyParser.urlencoded({ extended: false });
 
 ///////////////////////////////////////////////////////////////////////////////////////
 // Setup the issuance request payload template
 //////////// Setup the issuance request payload template
-var requestConfigFile = process.argv.slice(2)[1];
+let requestConfigFile = process.argv.slice(2)[1];
 if ( !requestConfigFile ) {
   requestConfigFile = process.env.ISSUANCEFILE || './issuance_request_config.json';
 }
-var issuanceConfig = require( requestConfigFile );
+let issuanceConfig = require( requestConfigFile );
 issuanceConfig.registration.clientName = "Node.js SDK API Issuer";
 // get the manifest from config.json, this is the URL to the credential created in the azure portal. 
 // the display and rules file to create the credential can be found in the credentialfiles directory
@@ -39,41 +29,41 @@ issuanceConfig.issuance.manifest = mainApp.config["CredentialManifest"]
 if ( issuanceConfig.issuance.pin && issuanceConfig.issuance.pin.length == 0 ) {
   issuanceConfig.issuance.pin = null;
 }
-var apiKey = uuid.v4();
+let apiKey = uuid.v4();
 if ( issuanceConfig.callback.headers ) {
   issuanceConfig.callback.headers['api-key'] = apiKey;
 }
 
 function requestTrace( req ) {
-  var dateFormatted = new Date().toISOString().replace("T", " ");
-  var h1 = '//****************************************************************************';
+  let dateFormatted = new Date().toISOString().replace("T", " ");
+  let h1 = '//****************************************************************************';
   console.log( `${h1}\n${dateFormatted}: ${req.method} ${req.protocol}://${req.headers["host"]}${req.originalUrl}` );
   console.log( `Headers:`)
   console.log(req.headers);
 }
 
 function generatePin( digits ) {
-  var add = 1, max = 12 - add;
+  let add = 1, max = 12 - add;
   max        = Math.pow(10, digits+add);
-  var min    = max/10; // Math.pow(10, n) basically
-  var number = Math.floor( Math.random() * (max - min + 1) ) + min;
+  let min    = max/10; // Math.pow(10, n) basically
+  let number = Math.floor( Math.random() * (max - min + 1) ) + min;
   return ("" + number).substring(add); 
 }
 /**
  * This method is called from the UI to initiate the issuance of the verifiable credential
  */
 mainApp.app.post('/api/issuer/issuance-request', async (req, res) => {
-  var body = '';
+  let body = '';
   req.on('data', function (data) {
     body += data;
   });
   req.on('end', async function () {
     requestTrace( req );
-    var id = req.session.id;
+    let id = req.session.id;
     
     // prep a session state of 0
     mainApp.sessionStore.get( id, (error, session) => {
-      var sessionData = {
+      let sessionData = {
         "status" : 0,
         "message": "Waiting for QR code to be scanned"
       };
@@ -84,7 +74,7 @@ mainApp.app.post('/api/issuer/issuance-request', async (req, res) => {
     });
 
     // get the Access Token
-    var accessToken = "";
+    let accessToken = "";
     try {
       const result = await mainApp.msalCca.acquireTokenByClientCredential(mainApp.msalClientCredentialRequest);
       if ( result ) {
@@ -123,11 +113,11 @@ mainApp.app.post('/api/issuer/issuance-request', async (req, res) => {
     }
 
     console.log( 'VC Client API Request' );
-    var client_api_request_endpoint = `${mainApp.config.msIdentityHostName}${mainApp.config.azTenantId}/verifiablecredentials/request`;
+    let client_api_request_endpoint = `${mainApp.config.msIdentityHostName}${mainApp.config.azTenantId}/verifiablecredentials/request`;
     console.log( client_api_request_endpoint );
     console.log( issuanceConfig );
 
-    var payload = JSON.stringify(issuanceConfig);
+    let payload = JSON.stringify(issuanceConfig);
     const fetchOptions = {
       method: 'POST',
       body: payload,
@@ -139,7 +129,7 @@ mainApp.app.post('/api/issuer/issuance-request', async (req, res) => {
     };
 
     const response = await fetch(client_api_request_endpoint, fetchOptions);
-    var resp = await response.json()
+    let resp = await response.json()
     // the response from the VC Request API call is returned to the caller (the UI). It contains the URI to the request which Authenticator can download after
     // it has scanned the QR code. If the payload requested the VC Request service to create the QR code that is returned as well
     // the javascript in the UI will use that QR code to display it on the screen to the user.            
@@ -156,7 +146,7 @@ mainApp.app.post('/api/issuer/issuance-request', async (req, res) => {
  * This method is called by the VC Request API when the user scans a QR code and presents a Verifiable Credential to the service
  */
 mainApp.app.post('/api/issuer/issuance-request-callback', parser, async (req, res) => {
-  var body = '';
+  let body = '';
   req.on('data', function (data) {
     body += data;
   });
@@ -169,8 +159,8 @@ mainApp.app.post('/api/issuer/issuance-request-callback', parser, async (req, re
         });  
       return; 
     }
-    var issuanceResponse = JSON.parse(body.toString());
-    var message = null;
+    let issuanceResponse = JSON.parse(body.toString());
+    let message = null;
     // there are 2 different callbacks. 1 if the QR code is scanned (or deeplink has been followed)
     // Scanning the QR code makes Authenticator download the specific request from the server
     // the request will be deleted from the server immediately.
@@ -179,7 +169,7 @@ mainApp.app.post('/api/issuer/issuance-request-callback', parser, async (req, re
     if ( issuanceResponse.code == "request_retrieved" ) {
       message = "QR Code is scanned. Waiting for issuance to complete...";
       mainApp.sessionStore.get(issuanceResponse.state, (error, session) => {
-        var sessionData = {
+        let sessionData = {
           "status" : "request_retrieved",
           "message": message
         };
@@ -193,7 +183,7 @@ mainApp.app.post('/api/issuer/issuance-request-callback', parser, async (req, re
     if ( issuanceResponse.code == "issuance_successful" ) {
       message = "Credential successfully issued";
       mainApp.sessionStore.get(issuanceResponse.state, (error, session) => {
-        var sessionData = {
+        let sessionData = {
           "status" : "issuance_successful",
           "message": message
         };
@@ -206,7 +196,7 @@ mainApp.app.post('/api/issuer/issuance-request-callback', parser, async (req, re
 
     if ( issuanceResponse.code == "issuance_error" ) {
       mainApp.sessionStore.get(issuanceResponse.state, (error, session) => {
-        var sessionData = {
+        let sessionData = {
           "status" : "issuance_error",
           "message": issuanceResponse.error.message,
           "payload" :issuanceResponse.error.code
@@ -228,7 +218,7 @@ mainApp.app.post('/api/issuer/issuance-request-callback', parser, async (req, re
  * this method will respond with the status so the UI can reflect if the QR code was scanned and with the result of the presentation
  */
 mainApp.app.get('/api/issuer/issuance-response', async (req, res) => {
-  var id = req.query.id;
+  let id = req.query.id;
   requestTrace( req );
   mainApp.sessionStore.get( id, (error, session) => {
     if (session && session.sessionData) {
