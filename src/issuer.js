@@ -26,7 +26,7 @@ issuanceConfig.registration.clientName = "Node.js SDK API Issuer";
 issuanceConfig.authority = mainApp.config["IssuerAuthority"]
 issuanceConfig.issuance.manifest = mainApp.config["CredentialManifest"]
 // if there is pin code in the config, but length is zero - remove it. It really shouldn't be there
-if ( issuanceConfig.issuance.pin && issuanceConfig.issuance.pin.length == 0 ) {
+if ( issuanceConfig.issuance.pin && issuanceConfig.issuance.pin.length === 0 ) {
   issuanceConfig.issuance.pin = null;
 }
 let apiKey = uuid.v4();
@@ -107,9 +107,9 @@ mainApp.app.post('/api/issuer/issuance-request', async (req, res) => {
       issuanceConfig.issuance.claims.given_name = claim.firstname;
       issuanceConfig.issuance.claims.family_name = claim.surname;
       issuanceConfig.issuance.claims.DOB = claim.DOB;
-      issuanceConfig.issuance.claims.email = claim.email,
-      issuanceConfig.issuance.claims.disability = claim.disability
-      issuanceConfig.issuance.claims.adjustment = claim.adjustment
+      issuanceConfig.issuance.claims.email = claim.email;
+      issuanceConfig.issuance.claims.disability = claim.disability;
+      issuanceConfig.issuance.claims.adjustment = claim.adjustment;
     }
 
     console.log( 'VC Client API Request' );
@@ -153,7 +153,7 @@ mainApp.app.post('/api/issuer/issuance-request-callback', parser, async (req, re
   req.on('end', function () {
     requestTrace( req );
     console.log( body );
-    if ( req.headers['api-key'] != apiKey ) {
+    if ( req.headers['api-key'] !== apiKey ) {
       res.status(401).json({
         'error': 'api-key wrong or missing'
         });  
@@ -166,7 +166,7 @@ mainApp.app.post('/api/issuer/issuance-request-callback', parser, async (req, re
     // the request will be deleted from the server immediately.
     // That's why it is so important to capture this callback and relay this to the UI so the UI can hide
     // the QR code to prevent the user from scanning it twice (resulting in an error since the request is already deleted)
-    if ( issuanceResponse.code == "request_retrieved" ) {
+    if ( issuanceResponse.code === "request_retrieved" ) {
       message = "QR Code is scanned. Waiting for issuance to complete...";
       mainApp.sessionStore.get(issuanceResponse.state, (error, session) => {
         let sessionData = {
@@ -180,7 +180,7 @@ mainApp.app.post('/api/issuer/issuance-request-callback', parser, async (req, re
       })      
     }
 
-    if ( issuanceResponse.code == "issuance_successful" ) {
+    if ( issuanceResponse.code === "issuance_successful" ) {
       message = "Credential successfully issued";
       mainApp.sessionStore.get(issuanceResponse.state, (error, session) => {
         let sessionData = {
@@ -194,7 +194,7 @@ mainApp.app.post('/api/issuer/issuance-request-callback', parser, async (req, re
       })      
     }
 
-    if ( issuanceResponse.code == "issuance_error" ) {
+    if ( issuanceResponse.code === "issuance_error" ) {
       mainApp.sessionStore.get(issuanceResponse.state, (error, session) => {
         let sessionData = {
           "status" : "issuance_error",
@@ -211,7 +211,8 @@ mainApp.app.post('/api/issuer/issuance-request-callback', parser, async (req, re
     res.send()
   });  
   res.send()
-})
+});
+
 /**
  * this function is called from the UI polling for a response from the AAD VC Service.
  * when a callback is received at the presentationCallback service the session will be updated
@@ -225,6 +226,5 @@ mainApp.app.get('/api/issuer/issuance-response', async (req, res) => {
       console.log(`status: ${session.sessionData.status}, message: ${session.sessionData.message}`);
       res.status(200).json(session.sessionData);   
       }
-  })
-})
-
+  });
+});
