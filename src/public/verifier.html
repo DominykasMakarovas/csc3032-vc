@@ -81,14 +81,14 @@
                                     console.log(response)
                                     respMsg = JSON.parse(response);
                                     // QR Code scanned
-                                    if (respMsg.status == 'request_retrieved') {
+                                    if (respMsg.status === 'request_retrieved') {
                                         document.getElementById('message-wrapper').style.display = "block";
                                         document.getElementById('qrText').style.display = "none";
                                         document.getElementById('qrcode').style.display = "none";
                                         document.getElementById('message').innerHTML = respMsg.message;
                                     }
                                     
-                                    if (respMsg.status == 'presentation_verified') {
+                                    if (respMsg.status === 'presentation_verified') {
                                         document.getElementById('message').innerHTML = respMsg.message;
                                         document.getElementById('payload').innerHTML = "Payload: " + JSON.stringify(respMsg.payload);
                                         document.getElementById('subject').innerHTML = respMsg.firstName +" " + respMsg.lastName +" holds an Access For All credential";
