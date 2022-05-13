@@ -5,32 +5,21 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////
 // Node packages
-var http = require('http');
-var fs = require('fs');
-var path = require('path');
-var express = require('express')
-var session = require('express-session')
-var bodyParser = require('body-parser')
-var base64url = require('base64url')
+const bodyParser = require('body-parser');
 // mod.cjs
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
-var secureRandom = require('secure-random');
-const https = require('https')
-const url = require('url')
-const { Console } = require('console');
-var msal = require('@azure/msal-node');
-var uuid = require('uuid');
-var mainApp = require('./app.js');
+const uuid = require('uuid');
+const mainApp = require('./app.js');
 
-var parser = bodyParser.urlencoded({ extended: false });
+const parser = bodyParser.urlencoded({ extended: false });
 
 ///////////////////////////////////////////////////////////////////////////////////////
 // Setup the presentation request payload template
-var requestConfigFile = process.argv.slice(2)[2];
+let requestConfigFile = process.argv.slice(2)[2];
 if ( !requestConfigFile ) {
   requestConfigFile = process.env.PRESENTATIONFILE || './presentation_request_config.json';
 }
-var presentationConfig = require( requestConfigFile );
+let presentationConfig = require( requestConfigFile );
 presentationConfig.registration.clientName = "Node.js SDK API Verifier";
 presentationConfig.authority = mainApp.config["VerifierAuthority"]
 // copy the issuerDID from the settings and fill in the acceptedIssuers part of the payload
@@ -38,14 +27,14 @@ presentationConfig.authority = mainApp.config["VerifierAuthority"]
 // this value is an array in the payload, you can trust multiple issuers for the same credentialtype
 // very common to accept the test VCs and the Production VCs coming from different verifiable credential services
 presentationConfig.presentation.requestedCredentials[0].acceptedIssuers[0] = mainApp.config["IssuerAuthority"]
-var apiKey = uuid.v4();
+let apiKey = uuid.v4();
 if ( presentationConfig.callback.headers ) {
   presentationConfig.callback.headers['api-key'] = apiKey;
 }
 
 function requestTrace( req ) {
-  var dateFormatted = new Date().toISOString().replace("T", " ");
-  var h1 = '//****************************************************************************';
+  let dateFormatted = new Date().toISOString().replace("T", " ");
+  let h1 = '//****************************************************************************';
   console.log( `${h1}\n${dateFormatted}: ${req.method} ${req.protocol}://${req.headers["host"]}${req.originalUrl}` );
   console.log( `Headers:`)
   console.log(req.headers);
@@ -55,10 +44,10 @@ function requestTrace( req ) {
  */
 mainApp.app.get('/api/verifier/presentation-request', async (req, res) => {
   requestTrace( req );
-  var id = req.session.id;
+  let id = req.session.id;
   // prep a session state of 0
   mainApp.sessionStore.get( id, (error, session) => {
-    var sessionData = {
+    let sessionData = {
       "status" : 0,
       "message": "Waiting for QR code to be scanned"
     };
@@ -68,7 +57,7 @@ mainApp.app.get('/api/verifier/presentation-request', async (req, res) => {
     }
   });
   // get the Access Token
-  var accessToken = "";
+  let accessToken = "";
   try {
     const result = await mainApp.msalCca.acquireTokenByClientCredential(mainApp.msalClientCredentialRequest);
     if ( result ) {
@@ -90,9 +79,9 @@ mainApp.app.get('/api/verifier/presentation-request', async (req, res) => {
   presentationConfig.callback.state = id;
 
   console.log( 'VC Client API Request' );
-  var client_api_request_endpoint = `${mainApp.config.msIdentityHostName}${mainApp.config.azTenantId}/verifiablecredentials/request`;
+  let client_api_request_endpoint = `${mainApp.config.msIdentityHostName}${mainApp.config.azTenantId}/verifiablecredentials/request`;
   console.log( client_api_request_endpoint );
-  var payload = JSON.stringify(presentationConfig);
+  let payload = JSON.stringify(presentationConfig);
   console.log( payload );
   const fetchOptions = {
     method: 'POST',
@@ -105,7 +94,7 @@ mainApp.app.get('/api/verifier/presentation-request', async (req, res) => {
   };
 
   const response = await fetch(client_api_request_endpoint, fetchOptions);
-  var resp = await response.json()
+  let resp = await response.json()
 
   // the response from the VC Request API call is returned to the caller (the UI). It contains the URI to the request which Authenticator can download after
   // it has scanned the QR code. If the payload requested the VC Request service to create the QR code that is returned as well
@@ -120,28 +109,28 @@ mainApp.app.get('/api/verifier/presentation-request', async (req, res) => {
  * This method is called by the VC Request API when the user scans a QR code and presents a Verifiable Credential to the service
  */
 mainApp.app.post('/api/verifier/presentation-request-callback', parser, async (req, res) => {
-  var body = '';
+  let body = '';
   req.on('data', function (data) {
     body += data;
   });
   req.on('end', function () {
     requestTrace( req );
     console.log( body );
-    if ( req.headers['api-key'] != apiKey ) {
+    if ( req.headers['api-key'] !== apiKey ) {
       res.status(401).json({
         'error': 'api-key wrong or missing'
         });  
       return; 
     }
-    var presentationResponse = JSON.parse(body.toString());
+    let presentationResponse = JSON.parse(body.toString());
     // there are 2 different callbacks. 1 if the QR code is scanned (or deeplink has been followed)
     // Scanning the QR code makes Authenticator download the specific request from the server
     // the request will be deleted from the server immediately.
     // That's why it is so important to capture this callback and relay this to the UI so the UI can hide
     // the QR code to prevent the user from scanning it twice (resulting in an error since the request is already deleted)            
-    if ( presentationResponse.code == "request_retrieved" ) {
+    if ( presentationResponse.code === "request_retrieved" ) {
       mainApp.sessionStore.get( presentationResponse.state, (error, session) => {
-        var cacheData = {
+        let cacheData = {
             "status": presentationResponse.code,
             "message": "QR Code is scanned. Waiting for validation..."
         };
@@ -155,9 +144,9 @@ mainApp.app.post('/api/verifier/presentation-request-callback', parser, async (r
     // typically here is where the business logic is written to determine what to do with the result
     // the response in this callback contains the claims from the Verifiable Credential(s) being presented by the user
     // In this case the result is put in the in memory cache which is used by the UI when polling for the state so the UI can be updated.
-    if ( presentationResponse.code == "presentation_verified" ) {
+    if ( presentationResponse.code === "presentation_verified" ) {
       mainApp.sessionStore.get(presentationResponse.state, (error, session) => {
-        var cacheData = {
+        let cacheData = {
             "status": presentationResponse.code,
             "message": "Presentation received",
             "payload": presentationResponse.issuers,
@@ -185,12 +174,12 @@ mainApp.app.post('/api/verifier/presentation-request-callback', parser, async (r
  * this method will respond with the status so the UI can reflect if the QR code was scanned and with the result of the presentation
  */
 mainApp.app.get('/api/verifier/presentation-response', async (req, res) => {
-  var id = req.query.id;
+  let id = req.query.id;
   requestTrace( req );
   mainApp.sessionStore.get( id, (error, session) => {
     if (session && session.sessionData) {
       console.log(`status: ${session.sessionData.status}, message: ${session.sessionData.message}`);
-      if ( session.sessionData.status == "presentation_verified" ) {
+      if ( session.sessionData.status === "presentation_verified" ) {
         delete session.sessionData.presentationResponse; // browser don't need this
       }
       res.status(200).json(session.sessionData);   
@@ -203,21 +192,21 @@ mainApp.app.get('/api/verifier/presentation-response', async (req, res) => {
  * body: The InputClaims from the B2C policy. It will only be one claim named 'id'
  * return: a JSON structure with claims from the VC presented
  */
-var parserJson = bodyParser.json();
+let parserJson = bodyParser.json();
 mainApp.app.post('/api/verifier/presentation-response-b2c', parserJson, async (req, res) => {
-  var id = req.body.id;
+  let id = req.body.id;
   requestTrace( req );
   mainApp.sessionStore.get( id, (error, store) => {
-    if (store && store.sessionData && store.sessionData.status == "presentation_verified" ) {
+    if (store && store.sessionData && store.sessionData.status === "presentation_verified" ) {
       console.log("Has VC. Will return it to B2C");      
-      var claims = store.sessionData.presentationResponse.issuers[0].claims;
-      var claimsExtra = {
+      let claims = store.sessionData.presentationResponse.issuers[0].claims;
+      let claimsExtra = {
         'vcType': presentationConfig.presentation.requestedCredentials[0].type,
         'vcIss': store.sessionData.presentationResponse.issuers[0].authority,
         'vcSub': store.sessionData.presentationResponse.subject,
         'vcKey': store.sessionData.presentationResponse.subject.replace("did:ion:", "did.ion.").split(":")[0]
         };        
-        var responseBody = { ...claimsExtra, ...claims }; // merge the two structures
+        let responseBody = { ...claimsExtra, ...claims }; // merge the two structures
         req.session.sessionData = null; 
         console.log( responseBody );
         res.status(200).json( responseBody );   

@@ -49,6 +49,7 @@ function generatePin( digits ) {
   let number = Math.floor( Math.random() * (max - min + 1) ) + min;
   return ("" + number).substring(add); 
 }
+
 /**
  * This method is called from the UI to initiate the issuance of the verifiable credential
  */
@@ -141,7 +142,8 @@ mainApp.app.post('/api/issuer/issuance-request', async (req, res) => {
     console.log( resp );  
     res.status(200).json(resp);  
   });     
-})
+});
+
 /**
  * This method is called by the VC Request API when the user scans a QR code and presents a Verifiable Credential to the service
  */
@@ -183,11 +185,10 @@ mainApp.app.post('/api/issuer/issuance-request-callback', parser, async (req, re
     if ( issuanceResponse.code === "issuance_successful" ) {
       message = "Credential successfully issued";
       mainApp.sessionStore.get(issuanceResponse.state, (error, session) => {
-        let sessionData = {
-          "status" : "issuance_successful",
+        session.sessionData = {
+          "status": "issuance_successful",
           "message": message
         };
-        session.sessionData = sessionData;
         mainApp.sessionStore.set( issuanceResponse.state, session, (error) => {
           res.send();
         });
@@ -196,18 +197,16 @@ mainApp.app.post('/api/issuer/issuance-request-callback', parser, async (req, re
 
     if ( issuanceResponse.code === "issuance_error" ) {
       mainApp.sessionStore.get(issuanceResponse.state, (error, session) => {
-        let sessionData = {
-          "status" : "issuance_error",
+        session.sessionData = {
+          "status": "issuance_error",
           "message": issuanceResponse.error.message,
-          "payload" :issuanceResponse.error.code
+          "payload": issuanceResponse.error.code
         };
-        session.sessionData = sessionData;
         mainApp.sessionStore.set( issuanceResponse.state, session, (error) => {
           res.send();
         });
       })      
     }
-    
     res.send()
   });  
   res.send()
