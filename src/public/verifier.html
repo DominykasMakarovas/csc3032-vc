@@ -51,8 +51,16 @@
                 const homeButton = document.getElementById('homeButton');
                 const refresh = document.getElementById('refresh');
                 const signIn = document.getElementById('sign-in');
+                const qrText = document.getElementById('qrText');
+                const messageWrapper = document.getElementById('message-wrapper');
+                const message = document.getElementById('message');
+                const payload = document.getElementById('payload');
+                const subject = document.getElementById('subject');
+                const disability = document.getElementById('disability');
+                const qrCodeDisplay = document.getElementById('qrcode');
                 let qrcode = new QRCode("qrcode", { width: 300, height: 300 });
                 let respPresentationReq = null;
+
                 signIn.addEventListener('click', () => {
                     fetch('/api/verifier/presentation-request')
                     .then(function(response) {
@@ -70,31 +78,31 @@
                             } else {
                                 console.log(`Not Android or IOS. Generating QR code encoded with ${message}`);
                                 qrcode.makeCode(respPresentationReq.url);
-                                document.getElementById('sign-in').style.visibility = "hidden";
-                                document.getElementById('qrText').style.display = "block";
+                                signIn.style.visibility = "hidden";
+                                qrText.style.display = "block";
                             }
                         }).catch(error => { console.log(error.message); })
-                    }).catch(error => { console.log(error.message); })
+                    }).catch(error => { console.log(error.message); });
                     let checkStatus = setInterval(function () {
                         fetch('api/verifier/presentation-response?id=' + respPresentationReq.id )
                             .then(response => response.text())
-                            .catch(error => document.getElementById("message").innerHTML = error)
+                            .catch(error => message.innerHTML = error)
                             .then(response => {
                                 if (response.length > 0) {
                                     console.log(response)
                                     respMsg = JSON.parse(response);
                                     // QR Code scanned
                                     if (respMsg.status === 'request_retrieved') {
-                                        document.getElementById('message-wrapper').style.display = "block";
-                                        document.getElementById('qrText').style.display = "none";
-                                        document.getElementById('qrcode').style.display = "none";
-                                        document.getElementById('message').innerHTML = respMsg.message;
+                                        messageWrapper.style.display = "block";
+                                        qrText.style.display = "none";
+                                        qrCodeDisplay.style.display = "none";
+                                        message.innerHTML = respMsg.message;
                                     }
                                     
                                     if (respMsg.status === 'presentation_verified') {
-                                        document.getElementById('message').innerHTML = respMsg.message;
-                                        document.getElementById('payload').innerHTML = "Payload: " + JSON.stringify(respMsg.payload);
-                                        document.getElementById('subject').innerHTML = respMsg.firstName +" " + respMsg.lastName +" holds an Access For All credential";
+                                        message.innerHTML = respMsg.message;
+                                        payload.innerHTML = "Payload: " + JSON.stringify(respMsg.payload);
+                                        subject.innerHTML = respMsg.firstName +" " + respMsg.lastName +" holds an Access For All credential";
                                         
                                         let arr = JSON.parse(sessionStorage.getItem('adjustments'));
                                         if (!arr){
@@ -107,8 +115,9 @@
                                                 if (!arr.includes(element))
                                                     arr.push(element);
                                             });
-                                            document.getElementById('disability').innerHTML = arr.join(", ");
-                                            document.getElementById('refresh').style.visibility = "visible";
+                                            disability.innerHTML = arr.join(", ");
+                                            refresh.style.visibility = "visible";
+                                            qrCodeDisplay.style.visibility = "disabled";
                                             sessionStorage.setItem('adjustments', JSON.stringify(arr));
                                             homeButton.style.visibility = "visible";
                                         }
