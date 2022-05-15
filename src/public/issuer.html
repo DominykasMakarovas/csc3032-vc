@@ -37,7 +37,6 @@
             <label for="adjustment2">Adjustment 2</label>
         </form>
         <button type="button" id="sign-in" class="button">CREATE CREDENTIAL</button><br>
-        
         <div id="qrText"  style="display:none;">
             <p class="small-text">
                 <img src="authenticator-icon.png" alt="Authenticator icon" class="icon-small"><br>
@@ -53,6 +52,9 @@
            <br />
            <div id="payload"></div>
         </div>
+        <div style="text-align : center; visibility: hidden">
+            <button type="button" id="homeButton" onclick="location.href='index.html'" class="button">Return Home</button>
+        </div>
         <script src="qrcode.min.js"></script>
         <script>
             const form = document.getElementById('form');
@@ -63,6 +65,7 @@
             const messageWrapper = document.getElementById('message-wrapper');
             const messageOutput = document.getElementById('message');
             const payload = document.getElementById('payload');
+            const homeButton = document.getElementById('homeButton');
             let qrcode = new QRCode("qrcode", { width: 300, height: 300 });
             let respIssuanceReq = null;
             
@@ -176,9 +179,10 @@
                                     form.style.display = "none";
                                     messageWrapper.style.display = "block";
                                     qrText.style.display = "none";
-                                    qrCodeDisplay.display = "none";
+                                    qrCodeDisplay.style.display = "none";
                                     pinCodeText.style.display = "none";
                                     messageOutput.innerHTML = respMsg.message;
+                                    homeButton.style.visibility = "visible";
                                     clearInterval(checkStatus);
                                 }
                                 if (respMsg.status === 'issuance_error') {
@@ -193,7 +197,7 @@
                 }, 2000);
             });
         </script>
-        </div>
+    </div>
     </div>
 </body>
 </html>

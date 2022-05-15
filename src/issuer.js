@@ -14,10 +14,7 @@ const parser = bodyParser.urlencoded({ extended: false });
 ///////////////////////////////////////////////////////////////////////////////////////
 // Setup the issuance request payload template
 //////////// Setup the issuance request payload template
-let requestConfigFile = process.argv.slice(2)[1];
-if ( !requestConfigFile ) {
-  requestConfigFile = process.env.ISSUANCEFILE || './issuance_request_config.json';
-}
+let requestConfigFile = process.env.ISSUANCEFILE || './issuance_request_config.json'
 let issuanceConfig = require( requestConfigFile );
 issuanceConfig.registration.clientName = "Node.js SDK API Issuer";
 // get the manifest from config.json, this is the URL to the credential created in the azure portal. 

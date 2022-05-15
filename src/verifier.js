@@ -6,7 +6,6 @@
 ///////////////////////////////////////////////////////////////////////////////////////
 // Node packages
 const bodyParser = require('body-parser');
-// mod.cjs
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 const uuid = require('uuid');
 const mainApp = require('./app.js');

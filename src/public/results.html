@@ -36,7 +36,7 @@
         </div>
     </div>
 
-    <div class="adjustments" id="no-adjustments" style="visibility: hidden;">
+    <div class="adjustments" id="no-adjustments" style="visibility: hidden; text-align: center; color: red">
         <p>No adjustments made yet, please use the <a href="verifier.html">verifier page</a> to get adjustments for this event/help request</p>  
     </div>
 
@@ -45,18 +45,23 @@
     </div>
 
     <script>
-        const button = document.getElementById('get-adjustments');
+        const adjustmentsButton = document.getElementById('get-adjustments');
         const clearButton = document.getElementById('clearButton');
         const printButton = document.getElementById('printAdjustments');
         const homeButton = document.getElementById('homeButton');
         let tabledata = document.getElementById('table-body');
-        
-        button.addEventListener('click', () => {
+
+        const noAdjustmentsMessage = document.getElementById('no-adjustments');
+        const adjustmentTable = document.getElementById('adjustment-table');
+        const tableInfo = document.getElementById('table-info');
+
+        adjustmentsButton.addEventListener('click', () => {
             let adjustments = JSON.parse(sessionStorage.getItem('adjustments'));
 
             if (adjustments == null) {
-                document.getElementById("no-adjustments").style.visibility = "visible";
-                document.getElementById('adjustment-table').style.visibility = "hidden";
+                homeButton.style.visibility = "visible";
+                noAdjustmentsMessage.style.visibility = "visible";
+                adjustmentTable.style.visibility = "hidden";
             } else {
                 tabledata = document.getElementById('table-body');
            
@@ -71,8 +76,8 @@
                 });
 
                 homeButton.style.visibility = "visible";
-                document.getElementById('get-adjustments').style.visibility = "hidden";
-                document.getElementById('table-info').style.visibility = "visible";
+                adjustmentsButton.style.visibility = "hidden";
+                tableInfo.style.visibility = "visible";
                 console.log(JSON.parse(sessionStorage.getItem('adjustments')));
             }
         });
@@ -86,19 +91,22 @@
             window.jsPDF = window.jspdf.jsPDF;
             window.html2canvas = html2canvas;
 
-            const y = 25;
-            const x = 20;
-            const marginX = x;
-            const headerY = y + 120;
+            const marginY = 25;
+            const marginX = 20;
+            const headerY = marginY + 120;
             const instructionY = headerY + 30;
-            const tableBodyY = instructionY + 30;
+            const dateY = instructionY + 30;
+            const tableBodyY = dateY + 30;
 
             const doc = new jspdf.jsPDF('p', 'pt', 'a4');
             let logo = new Image();
             logo.src = 'VerifiedCredentialExpert-icon.jpeg';
-            doc.addImage(logo, 'jpeg', x, y, 100, 100);
+            let date = new Date();
+            date.setSeconds(0,0);
+            let formattedDate = date.toISOString().replace("T", " ").replace(":00.000Z", " ");
+            doc.addImage(logo, 'jpeg', marginX, marginY, 100, 100);
             doc.text('Access For All', marginX, headerY);
-            // Date and time
+            doc.text("Generated at: " + formattedDate, marginX, dateY);
             doc.text('The following adjustments need be made for students:', marginX, instructionY);
             doc.html(tabledata, {
                 callback: (doc) => {

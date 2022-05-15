@@ -5,26 +5,18 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////
 // Node packages
-var express = require('express')
-var session = require('express-session')
-var base64url = require('base64url')
-var secureRandom = require('secure-random');
-var bodyParser = require('body-parser')
+const express = require('express')
+const session = require('express-session')
+const bodyParser = require('body-parser')
 // mod.cjs
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
-const https = require('https')
-const url = require('url')
 const { SSL_OP_COOKIE_EXCHANGE } = require('constants');
-var msal = require('@azure/msal-node');
+let msal = require('@azure/msal-node');
 const fs = require('fs');
 const crypto = require('crypto');
 
 ///////////////////////////////////////////////////////////////////////////////////////
-// config file can come from command line, env var or the default
-var configFile = process.argv.slice(2)[0];
-if ( !configFile ) {
-  configFile = process.env.CONFIGFILE || './config.json';
-}
+let configFile = process.env.CONFIGFILE || './config.json';;
 const config = require( configFile )
 if (!config.azTenantId) {
   throw new Error('The config.json file is missing.')
@@ -96,7 +88,7 @@ fetch( `https://login.microsoftonline.com/${config.azTenantId}/v2.0/.well-known/
 const app = express()
 const port = process.env.PORT || 8080;
 
-var parser = bodyParser.urlencoded({ extended: false });
+let parser = bodyParser.urlencoded({ extended: false });
 
 // Serve static files out of the /public directory
 app.use(express.static('public'))
@@ -104,7 +96,7 @@ app.use(express.static('public'))
 // Set up a simple server side session store.
 // The session store will briefly cache issuance requests
 // to facilitate QR code scanning.
-var sessionStore = new session.MemoryStore();
+let sessionStore = new session.MemoryStore();
 app.use(session({
   secret: 'cookie-secret-key',
   resave: false,
@@ -149,8 +141,8 @@ app.get('/', function (req, res) {
   res.sendFile('public/index.html', {root: __dirname})
 })
 
-var verifier = require('./verifier.js');
-var issuer = require('./issuer.js');
+const verifier = require('./verifier.js');
+const issuer = require('./issuer.js');
 
 // start server
 app.listen(port, () => console.log(`Example issuer app listening on port ${port}!`))

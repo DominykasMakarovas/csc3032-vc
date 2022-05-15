@@ -40,16 +40,19 @@
 
             <div id="refresh" style="visibility: hidden;">
                 <button type="button" id="refreshButton" class="button">Verify Another credential</button>
+            </div><br>
+
+            <div style="text-align : center; visibility: hidden">
+                <button type="button" id="homeButton" onclick="location.href='index.html'" class="button">Return Home</button>
             </div>
 
             <script src="qrcode.min.js"></script>
             <script>
-                var refresh = document.getElementById('refresh');
-                var signIn = document.getElementById('sign-in');
-                var signOut = document.getElementById('sign-out');
-                var display = document.getElementById('display');
-                var qrcode = new QRCode("qrcode", { width: 300, height: 300 });
-                var respPresentationReq = null;
+                const homeButton = document.getElementById('homeButton');
+                const refresh = document.getElementById('refresh');
+                const signIn = document.getElementById('sign-in');
+                let qrcode = new QRCode("qrcode", { width: 300, height: 300 });
+                let respPresentationReq = null;
                 signIn.addEventListener('click', () => {
                     fetch('/api/verifier/presentation-request')
                     .then(function(response) {
@@ -72,7 +75,7 @@
                             }
                         }).catch(error => { console.log(error.message); })
                     }).catch(error => { console.log(error.message); })
-                    var checkStatus = setInterval(function () {
+                    let checkStatus = setInterval(function () {
                         fetch('api/verifier/presentation-response?id=' + respPresentationReq.id )
                             .then(response => response.text())
                             .catch(error => document.getElementById("message").innerHTML = error)
@@ -107,7 +110,7 @@
                                             document.getElementById('disability').innerHTML = arr.join(", ");
                                             document.getElementById('refresh').style.visibility = "visible";
                                             sessionStorage.setItem('adjustments', JSON.stringify(arr));
-                                            console.log(JSON.parse(sessionStorage.getItem('adjustments')));
+                                            homeButton.style.visibility = "visible";
                                         }
                                         clearInterval(checkStatus);
                                     }
