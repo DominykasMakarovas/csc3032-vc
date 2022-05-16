@@ -13,74 +13,51 @@
     </head>    
     <body>
         <div id="wrap">
-            <div style="text-align: center;">
-                <img src="VerifiedCredentialExpert-icon.jpeg" onclick="location.href='index.html'" height=200px; />
+            <div class="header">
+                <img src="VerifiedCredentialExpert-icon.jpeg" id="logo" onclick="location.href='index.html'" height=200px; />
                 <h1>Verifiable Credential Access For All Verification</h1>
-        
-            <button type="button" id="sign-in" class="button">VERIFY CREDENTIAL</button>
-            <div id="qrText"  style="display:none;">
-                <p class="small-text">
-                    <img src="authenticator-icon.png" alt="Authenticator icon" class="icon-small"><br>
-                    Scan with Microsoft Authenticator
-                </p>
             </div>
-            <a id="deeplink" style="display: none;margin-top: 10px;">Tap to open Authenticator on mobile</a>
+            <div class="buttonHolder" id="buttonHolder">
+                <button type="button" id="refreshButton" class="button" style="visibility: hidden">Verify Another</button>
+                <button type="button" id="sign-in" class="button">VERIFY CREDENTIAL</button>
+                <button type="button" id="homeButton" onclick="location.href='index.html'" class="button" style="visibility: hidden">Return Home</button>
+            </div>
+            <div id="qrText">
+                <a href="https://www.microsoft.com/en-us/security/mobile-authenticator-app"><img src="authenticator-icon.png" alt="Tap to open Authenticator on mobile" class="icon-small"></a>
+                <p class="small-text">Scan with Microsoft Authenticator</p>
+            </div>
             <div id="qrcode" style="text-align: center"></div>
-            <div id="pinCodeText" style="display: none"></div>
-
-            <div id="message-wrapper" class="margin-bottom-75 margin-top-75" style="display: none">
-               <i class="fas fa-user-check green icon-text-large margin-bottom-25"></i>
+            <div id="message-wrapper">
                <div id="message"></div>
                 <br />
                <div id="subject"></div>
                 <br />
                <div id="payload"></div>
-               <p id="disability"></p>
             </div>
-
-            <div id="refresh" style="visibility: hidden;">
-                <button type="button" id="refreshButton" class="button">Verify Another credential</button>
-            </div><br>
-
-            <div style="text-align : center; visibility: hidden">
-                <button type="button" id="homeButton" onclick="location.href='index.html'" class="button">Return Home</button>
-            </div>
-
-            <script src="qrcode.min.js"></script>
+        </div>
+        <script src="qrcode.min.js"></script>
             <script>
                 const homeButton = document.getElementById('homeButton');
-                const refresh = document.getElementById('refresh');
                 const signIn = document.getElementById('sign-in');
                 const qrText = document.getElementById('qrText');
-                const messageWrapper = document.getElementById('message-wrapper');
                 const message = document.getElementById('message');
-                const payload = document.getElementById('payload');
-                const subject = document.getElementById('subject');
                 const disability = document.getElementById('disability');
                 const qrCodeDisplay = document.getElementById('qrcode');
                 let qrcode = new QRCode("qrcode", { width: 300, height: 300 });
                 let respPresentationReq = null;
 
                 signIn.addEventListener('click', () => {
+                    document.getElementById('sign-in').remove();
+                    qrText.style.visibility = "visible";
                     fetch('/api/verifier/presentation-request')
                     .then(function(response) {
                         response.text()
                         .catch(error => message.innerHTML = error)
                         .then(function(message) {
                             respPresentationReq = JSON.parse(message);
-                            if( /Android/i.test(navigator.userAgent) ) {
-                                console.log(`Android device! Using deep link (${respPresentationReq.url}).`);
-                                window.location.href = respPresentationReq.url; setTimeout(function () {
-                                window.location.href = "https://play.google.com/store/apps/details?id=com.azure.authenticator"; }, 2000);
-                            } else if (/iPhone/i.test(navigator.userAgent)) {
-                                console.log(`iOS device! Using deep link (${respPresentationReq.url}).`);
-                                window.location.replace(respPresentationReq.url);
-                            } else {
-                                console.log(`Not Android or IOS. Generating QR code encoded with ${message}`);
-                                qrcode.makeCode(respPresentationReq.url);
-                                signIn.style.visibility = "hidden";
-                                qrText.style.display = "block";
-                            }
+                            console.log(`Not Android or IOS. Generating QR code encoded with ${message}`);
+                            qrcode.makeCode(respPresentationReq.url);
+                            signIn.style.visibility = "hidden";
                         }).catch(error => { console.log(error.message); })
                     }).catch(error => { console.log(error.message); });
                     let checkStatus = setInterval(function () {
@@ -93,16 +70,13 @@
                                     let respMsg = JSON.parse(response);
                                     // QR Code scanned
                                     if (respMsg.status === 'request_retrieved') {
-                                        messageWrapper.style.display = "block";
                                         qrText.style.display = "none";
                                         qrCodeDisplay.style.display = "none";
                                         message.innerHTML = respMsg.message;
                                     }
                                     
                                     if (respMsg.status === 'presentation_verified') {
-                                        message.innerHTML = respMsg.message;
-                                        payload.innerHTML = "Payload: " + JSON.stringify(respMsg.payload);
-                                        subject.innerHTML = respMsg.firstName +" " + respMsg.lastName +" holds an Access For All credential";
+                                        message.innerHTML = respMsg.firstName +" " + respMsg.lastName +" holds an Access For All credential";
                                         
                                         let arr = JSON.parse(sessionStorage.getItem('adjustments'));
                                         if (!arr){
@@ -115,9 +89,14 @@
                                                 if (!arr.includes(element))
                                                     arr.push(element);
                                             });
-                                            disability.innerHTML = arr.join(", ");
-                                            refresh.style.visibility = "visible";
+
+                                            document.getElementById('refreshButton').style.visibility = "visible";
+                                            document.getElementById('homeButton').style.visibility = "visible";
+
                                             qrCodeDisplay.style.visibility = "disabled";
+                                            qrText.style.display = "none";
+                                            qrCodeDisplay.style.display = "none";
+                                            message.innerHTML = respMsg.message;
                                             sessionStorage.setItem('adjustments', JSON.stringify(arr));
                                             homeButton.style.visibility = "visible";
                                         }
@@ -127,10 +106,6 @@
                             })
                     }, 1500);
                 });
-                refresh.addEventListener('click', () => location.reload());
             </script>
-            </div>
-
-        </div>
     </body>
 </html>

@@ -1,25 +1,3 @@
-body {
-    font-family: sans-serif;
-    background-color: #E0E0E0;
-}
-#wrap {
-    margin: 0 auto;
-    width: 800px;
-}
-
-.button {
-    background-color: #3B2E58;
-    border: none;
-    color: white;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    border-radius: 8px;
-    display: inline-block;
-    font-size: 16px;
-    font-weight: bold;
-  }
-
 .dark-purple-fill {
   background-color: #3B2E58;
 }
@@ -27,17 +5,12 @@ body {
   background-color: #8661c5;
 }
 
-.icon-small {
-  width: 50px;
-  padding-bottom: 5px;
-}
-
 .icon-text-large {
   font-size: 100px;
 }
 
 .small-text {
-  font-size: 16px;
+    width: 12rem;
 }
 
 .tiny-text {
@@ -115,32 +88,186 @@ th, td {
   text-align: left;
 }
 
+/* DEFAULT */
+
+h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: sans-serif;
+    background-color: #E0E0E0;
+}
+
+.button {
+    background-color: #3B2E58;
+    border: none;
+    color: white;
+    padding: 1rem 2rem;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 8px;
+    display: inline-block;
+    font-size: 1rem;
+    font-weight: bold;
+    width: 15rem;
+}
+
+.buttonHolder {
+    justify-self: center;
+    gap: 1.5rem;
+}
+
+.icon-small {
+    max-width: 4rem;
+    max-height: 4rem;
+    margin-right: 0.25rem;
+}
+
+.icon-text-large {
+    font-size: 100px;
+}
+
+#qrcode > img {
+    margin: 0 auto;
+    padding-top: 25px;
+}
+
 #wrap {
-    text-align: center;
-}
-
-#userSelection {
     display: grid;
-    place-items:  center;
 }
 
-#userSelection li {
-    margin: 0;
+/* HEADER */
+
+.header {
+    display: flex;
+    margin: 0  auto;
+    align-items: center;
+}
+
+#logo {
+    height: 5.5rem;
+    border-radius: 2.1rem;
+    padding: 0.6rem;
+}
+.button + .button {
+    margin-left: 2rem;
+}
+/* USER INPUT */
+
+#form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: 5rem;
+    justify-content: center;
+    margin-top: 2.5rem;
+}
+
+#userCredentials {
+    justify-self: end;
+
+    display: flex;
+    flex-direction: column;
+    align-self: flex-start;
+    justify-content: space-between;
+
+    width: 11rem;
+    height: 100%;
+}
+
+#userCredentials div{
+    margin-bottom: 2rem;
+}
+
+#userCredentials label {
+    font-weight: bold;
+}
+
+div #DOB{
+    width: 10.32rem;
+}
+
+.disSelection {
+    list-style-type: none;
+    margin-top: 0.5rem;
     padding: 0;
 }
 
-#userSelection ul {
-    text-align:left;
-    list-style:none;
+.disSelection input {
+    cursor: pointer;
 }
 
-#wrap #form #userSelection label {
-    list-style:none;
-    text-align:left;
+.disSelection li {
+    height: 1.4rem;
 }
 
-h4 {
-    text-align: center;
-    margin: 0;
-    padding: 0;
+label span {
+    font-weight: normal;
+    letter-spacing: 0.05rem;
+}
+
+#qrText, #pinCodeText {
+    display: flex;
+    justify-self: center;
+    visibility: hidden;
+    margin-top: 2rem;
+}
+
+#message-wrapper, #no-adjustments {
+    display: flex;
+    justify-self: center;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+@media only screen and (max-width: 900px), (max-height: 600px){
+    body {
+        font-size: 14px;
+    }
+
+    #header {
+        display: block;
+        margin: 1rem  auto;
+    }
+
+    #header h1 {
+        display: none;
+    }
+
+    #form {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 9rem 1fr;
+        grid-column-gap: 5rem;
+        justify-content: center;
+        margin-top: 0.5rem;
+    }
+
+    #userCredentials {
+        justify-self: center;
+        justify-content: space-between;
+        width: 19rem;
+        height: 7rem;
+    }
+
+    #userCredentials div{
+        display: flex;
+        justify-content: space-between;
+    }
+
+    #userCredentials div{
+        margin-bottom: 0;
+    }
+
+    #userSelection {
+        justify-self: center;
+
+        width: 19rem;
+    }
+
+    .button {
+        width: 10rem;
+        padding: 1rem 1rem;
+    }
 }

@@ -5,125 +5,190 @@
     <title>Access For All</title>
     <meta name="description" content="Verifiable Credentials Access For All Issuer">
     <meta name="author" content="AccessForAll">
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" href="favicon.png">
 </head>
 <body>
-    <div id="wrap">
-        <img src="VerifiedCredentialExpert-icon.jpeg" onclick="location.href='index.html'" height=200px; />
+<div id="wrap">
+    <div class="header">
+        <img src="VerifiedCredentialExpert-icon.jpeg" onclick="location.href='index.html'" id="logo" alt="Company logo."/>
         <h1>Verifiable Credential Access For All Issuance</h1>
+    </div>
 
-        <form id="form">
-            <label for="firstName">First name:</label><br>
-            <input type="text" id="firstName" name="firstName" required><br><br>
-            <label for="lastName">Last name:</label><br>
-            <input type="text" id="lastName" name="lastName" required><br><br>
-            <label for="DOB">Date of Birth:</label><br>
-            <input type="date" id="DOB" name="DOB" required><br><br>
-            <label for="email">Email address:</label><br>
-            <input type="email" id="email" name="email"><br><br>
-
-            <div id="userSelection">
-                <ul>
-                    <h4>Disability:</h4>
-                    <li><label><input type="checkbox" name="disability" value="Physical"> <span>Physical</span></label></li>
-                    <li><label><input type="checkbox" name="disability" value="Sensory"> <span>Sensory</span></label></li>
-                    <li><label><input type="checkbox" name="disability" value="Learning Difficulty"><span>Learning Difficulties</span></label></li>
-                    <li><label><input type="checkbox" name="disability" value="Mental Health 5"><span>Mental Health</span></label><br></li>
-                    <li><label><input type="checkbox" name="disability" value="Long-term condition"><span>Long-term condition</span></label></li>
-                    <li><label><input type="checkbox" name="disability" value="Other"> <span>Other</span></label></li>
-                    <br>
-                    <h4>Adjustments:</h4>
-                    <li><label><input type="checkbox" name="adjustments" value="Scribe Present"> <span>Scribe Present</span></label></li>
-                    <li><label><input type="checkbox" name="adjustments" value="Larger Font"> <span>Larger Font</span></label></li>
-                    <li><label><input type="checkbox" name="adjustments" value="Slower presenting"> <span>Slower presenting</span></label></li>
-                    <li><label><input type="checkbox" name="adjustments" value="Wheelchair access"> <span>Wheelchair access</span></label></li>
-                    <li><label><input type="checkbox" name="adjustments" value="Induction loop/microphone required"> <span>Induction loop/microphone provided</span></label></li>
-                </ul>
+    <form id="form">
+        <div id="userCredentials">
+            <div>
+                <label for="firstName">First name:</label>
+                <input type="text" id="firstName" name="firstName" required>
             </div>
-        </form>
-        <button type="button" id="sign-in" class="button">CREATE CREDENTIAL</button><br>
-        <div id="qrText"  style="display:none;">
-            <p class="small-text">
-                <img src="authenticator-icon.png" alt="Authenticator icon" class="icon-small"><br>
-                Scan with Microsoft Authenticator
-            </p>
+            <div>
+                <label for="lastName">Last name:</label>
+                <input type="text" id="lastName" name="lastName" required>
+            </div>
+            <div>
+                <label for="DOB">Date of Birth:</label>
+                <input type="date" id="DOB" name="DOB" required>
+            </div>
+            <div>
+                <label for="email">Email address:</label>
+                <input type="email" id="email" name="email">
+            </div>
         </div>
-        <a id="deeplink" style="display: none;margin-top: 10px;">Tap to open Authenticator on mobile</a>
-        <div id="qrcode" style="text-align: center"></div>
-        <div id="pinCodeText" style="display: none"></div>
-        <div id="message-wrapper" class="margin-bottom-75 margin-top-75" style="display: none">
-           <i class="fas fa-user-check green icon-text-large margin-bottom-25"></i>
-           <div id="message"></div>
-           <br />
-           <div id="payload"></div>
+        <div id="userSelection">
+            <h4>Disability:</h4>
+            <ul class="disSelection">
+                <li>
+                    <label>
+                        <input type="checkbox" name="disability" value="Physical">
+                        <span>Physical</span>
+                    </label>
+                </li>
+                <li>
+                    <label>
+                        <input type="checkbox" name="disability" value="Sensory">
+                        <span>Sensory</span>
+                    </label>
+                </li>
+                <li>
+                    <label>
+                        <input type="checkbox" name="disability" value="Learning Difficulty">
+                        <span>Learning Difficulties</span>
+                    </label>
+                </li>
+                <li>
+                    <label>
+                        <input type="checkbox" name="disability" value="Mental Health">
+                        <span>Mental Health</span>
+                    </label>
+                </li>
+                <li>
+                    <label>
+                        <input type="checkbox" name="disability" value="Long-term condition">
+                        <span>Long-term condition</span>
+                    </label>
+                </li>
+                <li>
+                    <label>
+                        <input type="checkbox" name="disability" value="Other">
+                        <span>Other</span>
+                    </label>
+                </li>
+            </ul>
+            <h4>Adjustments:</h4>
+            <ul class="disSelection">
+                <li>
+                    <label>
+                        <input type="checkbox" name="adjustments" value="Scribe Present">
+                        <span>Scribe Present</span>
+                    </label>
+                </li>
+                <li>
+                    <label>
+                        <input type="checkbox" name="adjustments" value="Larger Font">
+                        <span>Larger Font</span>
+                    </label>
+                </li>
+                <li>
+                    <label>
+                        <input type="checkbox" name="adjustments" value="Slower presenting">
+                        <span>Slower presenting</span>
+                    </label>
+                </li>
+                <li>
+                    <label>
+                        <input type="checkbox" name="adjustments" value="Wheelchair access">
+                        <span>Wheelchair access</span>
+                    </label>
+                </li>
+                <li>
+                    <label>
+                        <input type="checkbox" name="adjustments" value="Induction loop/microphone required">
+                        <span>Induction loop/microphone required</span>
+                    </label>
+                </li>
+            </ul>
         </div>
-        <div style="text-align : center; visibility: hidden">
-            <button type="button" id="homeButton" onclick="location.href='index.html'" class="button">Return Home</button>
-        </div>
-        <script src="qrcode.min.js"></script>
-        <script>
-            const form = document.getElementById('form');
-            const signIn = document.getElementById('sign-in');
-            const qrText = document.getElementById('qrText');
-            const qrCodeDisplay = document.getElementById('qrcode');
-            const pinCodeText = document.getElementById('pinCodeText');
-            const messageWrapper = document.getElementById('message-wrapper');
-            const messageOutput = document.getElementById('message');
-            const payload = document.getElementById('payload');
-            const homeButton = document.getElementById('homeButton');
-            let qrcode = new QRCode("qrcode", { width: 300, height: 300 });
-            let respIssuanceReq = null;
-            
-            const validateData = (inputData) => {
-                let invalidInput = false;
-                Object.values(inputData).forEach(element => {
-                    if (element.length < 1)
-                        invalidInput = true;
-                });
+    </form>
+    <div class="buttonHolder" id="buttonHolder">
+        <button type="button" id="sign-in" class="button">CREATE CREDENTIAL</button>
+    </div>
+    <div id="qrText">
+        <a href="https://www.microsoft.com/en-us/security/mobile-authenticator-app"><img src="authenticator-icon.png" alt="Tap to open Authenticator on mobile" class="icon-small"></a>
+        <p class="small-text">Scan with Microsoft Authenticator</p>
+    </div>
+    <div id="qrcode" style="text-align: center"></div>
+    <div id="pinCodeText"></div>
+    <div id="message-wrapper" class="margin-bottom-75 margin-top-75" style="display: none">
+        <i class="fas fa-user-check green icon-text-large margin-bottom-25"></i>
+        <div id="message"></div>
+        <br />
+        <div id="payload"></div>
+    </div>
+    <script src="qrcode.min.js"></script>
+    <script>
+        const form = document.getElementById('form');
+        const signIn = document.getElementById('sign-in');
+        const qrText = document.getElementById('qrText');
+        const qrCodeDisplay = document.getElementById('qrcode');
+        const pinCodeText = document.getElementById('pinCodeText');
+        const messageWrapper = document.getElementById('message-wrapper');
+        const messageOutput = document.getElementById('message');
+        const payload = document.getElementById('payload');
+        const homeButton = document.getElementById('homeButton');
+        let qrcode = new QRCode("qrcode", { width: 300, height: 300 });
+        let respIssuanceReq = null;
 
-                return invalidInput;              
-            };
-            
-            signIn.addEventListener('click', () => {
-                let inputName = document.getElementById('firstName').value;
-                let inputSurname = document.getElementById('lastName').value;
-                let inputDOB = document.getElementById('DOB').value;
-                let inputEmail = document.getElementById('email').value;
-                let adjustments = document.getElementsByName('adjustments'); 
-                let disabilities = document.getElementsByName('disability');
+        const validateData = inputData => {
+            let invalidInput = false;
+            Object.values(inputData).forEach(element => {
+                if (element.length < 1)
+                    invalidInput = true;
+            });
 
-                let disabilityList = [];
-                for (let i = 0; i < disabilities.length; i++) {
-                    if (disabilities[i].type === 'checkbox' && disabilities[i].checked) {
-                        disabilityList.push(disabilities[i].value);
-                    }
+            return invalidInput;
+        };
+
+        signIn.addEventListener('click', () => {
+            qrText.style.visibility = "visible";
+            let inputName = document.getElementById('firstName').value;
+            let inputSurname = document.getElementById('lastName').value;
+            let inputDOB = document.getElementById('DOB').value;
+            let inputEmail = document.getElementById('email').value;
+            let adjustments = document.getElementsByName('adjustments');
+            let disabilities = document.getElementsByName('disability');
+
+            let disabilityList = [];
+            for (let i = 0; i < disabilities.length; i++) {
+                if (disabilities[i].type === 'checkbox' && disabilities[i].checked) {
+                    disabilityList.push(disabilities[i].value);
                 }
-                let allDisabilities = disabilityList.toString();
-                
-                let adjustmentList = [];
-                for (let i = 0; i < adjustments.length; i++) {
-                    if (adjustments[i].type === 'checkbox' && adjustments[i].checked) {
-                        adjustmentList.push(adjustments[i].value);
-                    }
-                }
-                let allAdjustments = adjustmentList.toString();
+            }
+            let allDisabilities = disabilityList.toString();
 
-                const inputData = {
-                    name : inputName,
-                    surname : inputSurname,
-                    DOB : inputDOB,
-                    email : inputEmail,
-                    adjustments : allAdjustments,
-                    disabilities : allDisabilities
+            let adjustmentList = [];
+            for (let i = 0; i < adjustments.length; i++) {
+                if (adjustments[i].type === 'checkbox' && adjustments[i].checked) {
+                    adjustmentList.push(adjustments[i].value);
                 }
+            }
+            let allAdjustments = adjustmentList.toString();
 
-                if (validateData(inputData)){
-                    alert('Please fill in all fields');
-                    return;
-                }
+            const inputData = {
+                name : inputName,
+                surname : inputSurname,
+                DOB : inputDOB,
+                email : inputEmail,
+                adjustments : allAdjustments,
+                disabilities : allDisabilities
+            }
 
-                fetch('/api/issuer/issuance-request',
+            if (validateData(inputData)){
+                alert('Please fill in all fields');
+                return;
+            }
+
+            fetch('/api/issuer/issuance-request',
                 {
                     method: 'POST',
                     body: JSON.stringify({
@@ -140,17 +205,9 @@
                 })
                 .then(function(response) {
                     response.text()
-                    .catch(error => messageOutput.innerHTML = error)
-                    .then(function(message) {
-                        respIssuanceReq = JSON.parse(message);
-                        if( /Android/i.test(navigator.userAgent) ) {
-                            console.log(`Android device! Using deep link (${respIssuanceReq.url}).`);
-                            window.location.href = respIssuanceReq.url; setTimeout(function () {
-                            window.location.href = "https://play.google.com/store/apps/details?id=com.azure.authenticator"; }, 2000);
-                        } else if (/iPhone/i.test(navigator.userAgent)) {
-                            console.log(`iOS device! Using deep link (${respIssuanceReq.url}).`);
-                            window.location.replace(respIssuanceReq.url);
-                        } else {
+                        .catch(error => messageOutput.innerHTML = error)
+                        .then(function(message) {
+                            respIssuanceReq = JSON.parse(message);
                             console.log(`Not Android or IOS. Generating QR code encoded with ${message}`);
                             qrcode.makeCode(respIssuanceReq.url);
                             signIn.style.display = "none";
@@ -158,51 +215,59 @@
                             if (respIssuanceReq.pin) {
                                 pinCodeText.innerHTML = "Pin code: " + respIssuanceReq.pin;
                                 pinCodeText.style.display = "block";
+                                pinCodeText.style.visibility = "visible";
+                            }
+                        }).catch(error => { console.log(error.message); })
+                }).catch(error => { console.log(error.message); })
+            let checkStatus = setInterval(function () {
+                fetch('api/issuer/issuance-response?id=' + respIssuanceReq.id )
+                    .then(response => response.text())
+                    .catch(error => messageOutput.innerHTML = error)
+                    .then(response => {
+                        if (response.length > 0) {
+                            console.log(response)
+                            let respMsg = JSON.parse(response);
+                            // QR Code scanned, show pincode if pincode is required
+                            if (respMsg.status === 'request_retrieved') {
+                                form.style.display = "none";
+                                messageWrapper.style.display = "block";
+                                qrText.style.display = "none";
+                                qrCodeDisplay.style.display = "none";
+                                if (respMsg.pin) {
+                                    pinCodeText.style.display = "visible";
+                                }
+                                messageOutput.innerHTML = respMsg.message;
+                            }
+                            if (respMsg.status === 'issuance_successful') {
+                                form.style.display = "none";
+                                messageWrapper.style.display = "block";
+                                qrText.style.display = "none";
+                                qrCodeDisplay.style.display = "none";
+                                pinCodeText.style.display = "none";
+                                messageOutput.innerHTML = respMsg.message;
+
+                                let buttonHolder = document.getElementById("buttonHolder");
+                                let homeButton = document.createElement("button");
+                                homeButton.id = "homeButton";
+                                homeButton.onclick = () => {location.href = 'index.html';};
+                                homeButton.className = 'button';
+                                homeButton.innerText = "Return Home";
+                                buttonHolder.appendChild(homeButton);
+
+                                clearInterval(checkStatus);
+                            }
+                            if (respMsg.status === 'issuance_error') {
+                                pinCodeText.style.display = "none";
+                                messageOutput.innerHTML = respMsg.message;
+                                messageOutput.innerHTML = "Issuance error occurred, did you enter the wrong pincode? Please refresh the page and try again.";
+                                payload.innerHTML = "Payload: " + respMsg.payload;
+                                clearInterval(checkStatus);
                             }
                         }
-                    }).catch(error => { console.log(error.message); })
-                }).catch(error => { console.log(error.message); })
-                let checkStatus = setInterval(function () {
-                    fetch('api/issuer/issuance-response?id=' + respIssuanceReq.id )
-                        .then(response => response.text())
-                        .catch(error => messageOutput.innerHTML = error)
-                        .then(response => {
-                            if (response.length > 0) {
-                                console.log(response)
-                                let respMsg = JSON.parse(response);
-                                // QR Code scanned, show pincode if pincode is required
-                                if (respMsg.status === 'request_retrieved') {
-                                    form.style.display = "none";
-                                    messageWrapper.style.display = "block";
-                                    qrText.style.display = "none";
-                                    qrCodeDisplay.style.display = "none";
-                                    if (respMsg.pin) {
-                                        pinCodeText.style.display = "visible";
-                                    }
-                                    messageOutput.innerHTML = respMsg.message;
-                                }
-                                if (respMsg.status === 'issuance_successful') {
-                                    form.style.display = "none";
-                                    messageWrapper.style.display = "block";
-                                    qrText.style.display = "none";
-                                    qrCodeDisplay.style.display = "none";
-                                    pinCodeText.style.display = "none";
-                                    messageOutput.innerHTML = respMsg.message;
-                                    homeButton.style.visibility = "visible";
-                                    clearInterval(checkStatus);
-                                }
-                                if (respMsg.status === 'issuance_error') {
-                                    pinCodeText.style.display = "none";
-                                    messageOutput.innerHTML = respMsg.message;
-                                    messageOutput.innerHTML = "Issuance error occurred, did you enter the wrong pincode? Please refresh the page and try again.";
-                                    payload.innerHTML = "Payload: " + respMsg.payload;
-                                    clearInterval(checkStatus);
-                                }
-                            }
-                        })
-                }, 2000);
-            });
-        </script>
-    </div>
+                    })
+            }, 2000);
+        });
+    </script>
+</div>
 </body>
 </html>

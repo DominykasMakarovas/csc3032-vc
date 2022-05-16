@@ -12,15 +12,15 @@
     </head>
     <body>
     <div id="wrap">
-        <div style="text-align : center;">
-            <img src="VerifiedCredentialExpert-icon.jpeg" onclick="location.href='index.html'" height=200px; />
-            <h1>Access For All - Reasonable Adjustments for this event</h1>
+        <div class="header">
+            <img src="VerifiedCredentialExpert-icon.jpeg" id="logo" onclick="location.href='index.html'" height=200px; />
+            <h1>Verifiable Credential Access For All Verification</h1>
+        </div>
+        <div class="buttonHolder">
             <button type="button" id="get-adjustments" class="button">GET ADJUSTMENTS</button>
         </div>
-    </div>
-    <br>
     <div id="table-info" style="visibility: hidden;">
-        <div style="text-align : center;">
+        <div>
             <table id="adjustment-table">
                 <thead>
                   <tr>
@@ -31,8 +31,11 @@
                 <tbody id="table-body">
                 </tbody>
             </table><br>
-            <button type="button" id="clearButton" class="button">Clear Adjustments</button>
-            <button type="button" id="printAdjustments" class="button">Print Adjustments</button>
+            <div class="buttonHolder">
+                <button type="button" id="clearButton" class="button">Clear Adjustments</button>
+                <button type="button" id="printAdjustments" class="button">Print Adjustments</button>
+            </div>
+
         </div>
     </div>
 
@@ -40,8 +43,9 @@
         <p>No adjustments made yet, please use the <a href="verifier.html">verifier page</a> to get adjustments for this event/help request</p>  
     </div>
 
-    <div style="text-align : center; visibility: hidden">
+    <div class="buttonHolder">
         <button type="button" id="homeButton" onclick="location.href='index.html'" class="button">Return Home</button>
+    </div>
     </div>
 
     <script>
