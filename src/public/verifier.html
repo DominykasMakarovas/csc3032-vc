@@ -29,10 +29,6 @@
             <div id="qrcode" style="text-align: center"></div>
             <div id="message-wrapper">
                <div id="message"></div>
-                <br />
-               <div id="subject"></div>
-                <br />
-               <div id="payload"></div>
             </div>
         </div>
         <script src="qrcode.min.js"></script>
@@ -40,6 +36,7 @@
                 const homeButton = document.getElementById('homeButton');
                 const signIn = document.getElementById('sign-in');
                 const qrText = document.getElementById('qrText');
+                const refreshButton = document.getElementById('refreshButton');
                 const message = document.getElementById('message');
                 const disability = document.getElementById('disability');
                 const qrCodeDisplay = document.getElementById('qrcode');
@@ -90,15 +87,14 @@
                                                     arr.push(element);
                                             });
 
-                                            document.getElementById('refreshButton').style.visibility = "visible";
-                                            document.getElementById('homeButton').style.visibility = "visible";
+                                            refreshButton.style.visibility = "visible";
+                                            homeButton.style.visibility = "visible";
 
                                             qrCodeDisplay.style.visibility = "disabled";
                                             qrText.style.display = "none";
                                             qrCodeDisplay.style.display = "none";
                                             message.innerHTML = respMsg.message;
                                             sessionStorage.setItem('adjustments', JSON.stringify(arr));
-                                            homeButton.style.visibility = "visible";
                                         }
                                         clearInterval(checkStatus);
                                     }
