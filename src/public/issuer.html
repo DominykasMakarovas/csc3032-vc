@@ -10,9 +10,8 @@
 </head>
 <body>
     <div id="wrap">
-        <div style="text-align: center;">
-            <img src="VerifiedCredentialExpert-icon.jpeg" onclick="location.href='index.html'" height=200px; />
-            <h1>Verifiable Credential Access For All Issuance</h1>
+        <img src="VerifiedCredentialExpert-icon.jpeg" onclick="location.href='index.html'" height=200px; />
+        <h1>Verifiable Credential Access For All Issuance</h1>
 
         <form id="form">
             <label for="firstName">First name:</label><br>
@@ -24,17 +23,24 @@
             <label for="email">Email address:</label><br>
             <input type="email" id="email" name="email"><br><br>
 
-            <label>Disability:</label><br>
-            <input type="checkbox" id="disability1" name="disability" value="Disability 1">
-            <label for="disability1">Disability 1</label><br>
-            <input type="checkbox" id="disability2" name="disability" value="Disability 2">
-            <label for="disability2">Disability 2</label><br><br>
-
-            <label>Adjustments:</label><br>
-            <input type="checkbox" id="adjustment1" name="adjustments" value="Adjustment 1">
-            <label for="adjustment1">Adjustment 1</label><br>
-            <input type="checkbox" id="adjustment2" name="adjustments" value="Adjustment 2">
-            <label for="adjustment2">Adjustment 2</label>
+            <div id="userSelection">
+                <ul>
+                    <h4>Disability:</h4>
+                    <li><label><input type="checkbox" name="disability" value="Physical"> <span>Physical</span></label></li>
+                    <li><label><input type="checkbox" name="disability" value="Sensory"> <span>Sensory</span></label></li>
+                    <li><label><input type="checkbox" name="disability" value="Learning Difficulty"><span>Learning Difficulties</span></label></li>
+                    <li><label><input type="checkbox" name="disability" value="Mental Health 5"><span>Mental Health</span></label><br></li>
+                    <li><label><input type="checkbox" name="disability" value="Long-term condition"><span>Long-term condition</span></label></li>
+                    <li><label><input type="checkbox" name="disability" value="Other"> <span>Other</span></label></li>
+                    <br>
+                    <h4>Adjustments:</h4>
+                    <li><label><input type="checkbox" name="adjustments" value="Scribe Present"> <span>Scribe Present</span></label></li>
+                    <li><label><input type="checkbox" name="adjustments" value="Larger Font"> <span>Larger Font</span></label></li>
+                    <li><label><input type="checkbox" name="adjustments" value="Slower presenting"> <span>Slower presenting</span></label></li>
+                    <li><label><input type="checkbox" name="adjustments" value="Wheelchair access"> <span>Wheelchair access</span></label></li>
+                    <li><label><input type="checkbox" name="adjustments" value="Induction loop/microphone required"> <span>Induction loop/microphone provided</span></label></li>
+                </ul>
+            </div>
         </form>
         <button type="button" id="sign-in" class="button">CREATE CREDENTIAL</button><br>
         <div id="qrText"  style="display:none;">
@@ -163,7 +169,7 @@
                         .then(response => {
                             if (response.length > 0) {
                                 console.log(response)
-                                respMsg = JSON.parse(response);
+                                let respMsg = JSON.parse(response);
                                 // QR Code scanned, show pincode if pincode is required
                                 if (respMsg.status === 'request_retrieved') {
                                     form.style.display = "none";
@@ -197,7 +203,6 @@
                 }, 2000);
             });
         </script>
-    </div>
     </div>
 </body>
 </html>

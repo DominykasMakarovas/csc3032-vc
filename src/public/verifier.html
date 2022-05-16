@@ -65,7 +65,7 @@
                     fetch('/api/verifier/presentation-request')
                     .then(function(response) {
                         response.text()
-                        .catch(error => document.getElementById("message").innerHTML = error)
+                        .catch(error => message.innerHTML = error)
                         .then(function(message) {
                             respPresentationReq = JSON.parse(message);
                             if( /Android/i.test(navigator.userAgent) ) {
@@ -90,7 +90,7 @@
                             .then(response => {
                                 if (response.length > 0) {
                                     console.log(response)
-                                    respMsg = JSON.parse(response);
+                                    let respMsg = JSON.parse(response);
                                     // QR Code scanned
                                     if (respMsg.status === 'request_retrieved') {
                                         messageWrapper.style.display = "block";
