@@ -112,6 +112,7 @@
     </form>
     <div class="buttonHolder" id="buttonHolder">
         <button type="button" id="sign-in" class="button">CREATE CREDENTIAL</button>
+        <button type="button" id="homeButton" onclick="location.href='index.html'" class="button" style="visibility: hidden">Return Home</button>
     </div>
     <div id="qrText">
         <a href="https://www.microsoft.com/en-us/security/mobile-authenticator-app"><img src="authenticator-icon.png" alt="Tap to open Authenticator on mobile" class="icon-small"></a>
@@ -151,6 +152,7 @@
 
         signIn.addEventListener('click', () => {
             qrText.style.visibility = "visible";
+            let homeButton = document.getElementById('homeButton');
             let inputName = document.getElementById('firstName').value;
             let inputSurname = document.getElementById('lastName').value;
             let inputDOB = document.getElementById('DOB').value;
@@ -246,13 +248,7 @@
                                 pinCodeText.style.display = "none";
                                 messageOutput.innerHTML = respMsg.message;
 
-                                let buttonHolder = document.getElementById("buttonHolder");
-                                let homeButton = document.createElement("button");
-                                homeButton.id = "homeButton";
-                                homeButton.onclick = () => {location.href = 'index.html';};
-                                homeButton.className = 'button';
-                                homeButton.innerText = "Return Home";
-                                buttonHolder.appendChild(homeButton);
+                                homeButton.style.visibility = "visible";
 
                                 clearInterval(checkStatus);
                             }
