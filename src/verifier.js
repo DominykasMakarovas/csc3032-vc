@@ -19,7 +19,7 @@ if ( !requestConfigFile ) {
   requestConfigFile = process.env.PRESENTATIONFILE || './presentation_request_config.json';
 }
 let presentationConfig = require( requestConfigFile );
-presentationConfig.registration.clientName = "Node.js SDK API Verifier";
+presentationConfig.registration.clientName = "Access For All SDK API Verifier";
 presentationConfig.authority = mainApp.config["VerifierAuthority"]
 // copy the issuerDID from the settings and fill in the acceptedIssuers part of the payload
 // this means only that issuer should be trusted for the requested credentialtype
